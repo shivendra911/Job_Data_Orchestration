@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevPageBtn = document.getElementById('prev-page');
     const nextPageBtn = document.getElementById('next-page');
     const pageIndicator = document.getElementById('page-indicator');
+    const btnChaosTrigger = document.getElementById('btn-chaos-trigger');
+    const btnChaosSpike = document.getElementById('btn-chaos-spike');
 
     // Init
     fetchSources();
@@ -42,6 +44,38 @@ document.addEventListener('DOMContentLoaded', () => {
         state.skip += state.limit;
         fetchJobs();
     });
+    
+    if (btnChaosTrigger) {
+        btnChaosTrigger.addEventListener('click', (e) => {
+            triggerIngestion('sandbox', e.currentTarget);
+        });
+    }
+
+    if (btnChaosSpike) {
+        btnChaosSpike.addEventListener('click', async (e) => {
+            const btn = e.currentTarget;
+            btn.disabled = true;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner"></span> Spiking...';
+            
+            try {
+                // Fire 5 rapid requests
+                const promises = Array(5).fill().map(() => 
+                    fetch('/api/v1/ingest/sandbox', { method: 'POST' })
+                );
+                await Promise.allSettled(promises);
+                
+                setTimeout(() => {
+                    fetchSources();
+                    state.skip = 0;
+                    fetchJobs();
+                }, 1000);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
+    }
 
     // API Calls
     async function fetchSources() {
@@ -49,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.isLoadingSources = true;
         
         try {
-            const res = await fetch('/api/v1/ingest/sources');
+            const res = await fetch('/api/v1/sources/');
             if (!res.ok) throw new Error('Failed to fetch sources');
             const data = await res.json();
             renderSources(data);

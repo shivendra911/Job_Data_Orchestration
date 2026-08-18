@@ -27,6 +27,24 @@
         </header>
 
         <main class="dashboard-grid">
+            <!-- Chaos Control Column (Sandbox) -->
+            <section class="chaos-panel glass-panel" style="border: 1px solid var(--status-error); background: rgba(239, 68, 68, 0.05);">
+                <div class="section-header">
+                    <h2 style="color: var(--status-error);">Chaos Control</h2>
+                </div>
+                <div class="source-list" style="margin-bottom: 1rem;">
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                        Inject failures to test system resilience. The sandbox server randomly returns 502 Bad Gateway, 429 Too Many Requests, and slow responses.
+                    </p>
+                    <button id="btn-chaos-trigger" class="btn btn-primary" style="background: var(--status-error); width: 100%; justify-content: center; margin-bottom: 0.5rem;">
+                        Trigger Sandbox Ingestion
+                    </button>
+                    <button id="btn-chaos-spike" class="btn btn-ghost" style="width: 100%; justify-content: center;">
+                        Simulate Traffic Spike (5x)
+                    </button>
+                </div>
+            </section>
+
             <!-- Sources Column -->
             <section class="sources-panel glass-panel">
                 <div class="section-header">
