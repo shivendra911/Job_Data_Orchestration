@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Ingestion Pipeline</title>
+    <link rel="stylesheet" href="/static/site.css">
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'brutalist') {
+            document.documentElement.setAttribute('data-theme', 'brutalist');
+        }
+    </script>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="/" class="site-nav-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            IngestPipe
+        </a>
+        <div class="site-nav-links">
+            <a href="/pricing" class="active">Pricing</a>
+            <a href="/docs">Documentation</a>
+            <a href="/app" class="btn-primary" style="color: var(--bg-main);">Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero" style="padding-bottom: 2rem;">
+            <h1>Simple, predictable pricing</h1>
+            <p>Scale your data operations without surprise costs.</p>
+        </section>
+
+        <section class="grid">
+            <div class="card">
+                <h3>Hobby</h3>
+                <p>For independent developers</p>
+                <div class="price-tag">$0<span>/mo</span></div>
+                <ul class="feature-list">
+                    <li>1,000 API Requests / day</li>
+                    <li>Community Support</li>
+                    <li>Standard API SLA</li>
+                    <li>Chaos Sandbox (Limited)</li>
+                </ul>
+                <a href="/app" class="btn-secondary" style="width: 100%;">Get Started</a>
+            </div>
+            
+            <div class="card" style="border-color: var(--text-main);">
+                <h3>Pro</h3>
+                <p>For growing startups</p>
+                <div class="price-tag">$99<span>/mo</span></div>
+                <ul class="feature-list">
+                    <li>100,000 API Requests / day</li>
+                    <li>Priority Email Support</li>
+                    <li>99.9% Uptime SLA</li>
+                    <li>Full Chaos Features</li>
+                </ul>
+                <a href="/app" class="btn-primary" style="width: 100%;">Start Trial</a>
+            </div>
+
+            <div class="card">
+                <h3>Enterprise</h3>
+                <p>For critical infrastructure</p>
+                <div class="price-tag">Custom</div>
+                <ul class="feature-list">
+                    <li>Unlimited Requests</li>
+                    <li>Dedicated Account Manager</li>
+                    <li>99.99% Uptime SLA</li>
+                    <li>Custom Adapters</li>
+                </ul>
+                <button class="btn-secondary" style="width: 100%;">Contact Sales</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 Ingestion Pipeline Systems. Built for engineering precision.</p>
+        </div>
+    </footer>
+</body>
+</html>

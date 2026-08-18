@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingestion Pipeline - Data Orchestration</title>
+    <link rel="stylesheet" href="/static/site.css">
+    <script>
+        // Init Theme from LocalStorage
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'brutalist') {
+            document.documentElement.setAttribute('data-theme', 'brutalist');
+        }
+    </script>
+</head>
+<body>
+    <nav class="site-nav">
+        <div class="site-nav-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            IngestPipe
+        </div>
+        <div class="site-nav-links">
+            <a href="/pricing">Pricing</a>
+            <a href="/docs">Documentation</a>
+            <a href="/app" class="btn-primary" style="color: var(--bg-main);">Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Industrial-Grade Job Data Orchestration</h1>
+            <p>A strictly-engineered pipeline for ingesting, normalizing, and syndicating job board data. Built for scale, resilience, and maximum throughput.</p>
+            <div class="hero-actions">
+                <a href="/app" class="btn-primary">Launch Dashboard</a>
+                <a href="/docs" class="btn-secondary">Read Docs</a>
+            </div>
+        </section>
+
+        <section class="grid">
+            <div class="card">
+                <h3>Chaos Engineering</h3>
+                <p>Test your downstream services with our built-in Sandbox. Inject synthetic 502s, rate limits, and latency spikes with a single click.</p>
+            </div>
+            <div class="card">
+                <h3>Circuit Breakers</h3>
+                <p>Automatic failure isolation. If a source goes down, our resilience layer trips the breaker, preventing cascading failures across your infrastructure.</p>
+            </div>
+            <div class="card">
+                <h3>Instant Export</h3>
+                <p>Dump millions of normalized records instantly. Export to JSON or CSV via optimized streaming endpoints right from your command center.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 Ingestion Pipeline Systems. Built for engineering precision.</p>
+        </div>
+    </footer>
+</body>
+</html>

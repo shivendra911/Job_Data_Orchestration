@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Ingestion Pipeline</title>
+    <link rel="stylesheet" href="/static/site.css">
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'brutalist') {
+            document.documentElement.setAttribute('data-theme', 'brutalist');
+        }
+    </script>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="/" class="site-nav-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            IngestPipe
+        </a>
+        <div class="site-nav-links">
+            <a href="/pricing">Pricing</a>
+            <a href="/docs" class="active">Documentation</a>
+            <a href="/app" class="btn-primary" style="color: var(--bg-main);">Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero" style="padding-bottom: 2rem; text-align: left;">
+            <h1>API Documentation</h1>
+            <p>Integrate our job orchestration pipeline directly into your systems.</p>
+        </section>
+
+        <div class="docs-layout">
+            <aside class="docs-sidebar">
+                <ul>
+                    <li><a href="#getting-started">Getting Started</a></li>
+                    <li><a href="#authentication">Authentication</a></li>
+                    <li><a href="#endpoints">Endpoints</a>
+                        <ul style="margin-left: 1rem; margin-top: 0.5rem; font-size: 0.9rem;">
+                            <li><a href="#get-jobs" style="color: var(--text-muted);">List Jobs</a></li>
+                            <li><a href="#get-sources" style="color: var(--text-muted);">List Sources</a></li>
+                            <li><a href="#trigger" style="color: var(--text-muted);">Trigger Ingestion</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#rate-limits">Rate Limits</a></li>
+                </ul>
+            </aside>
+
+            <article class="docs-content">
+                <h2 id="getting-started">Getting Started</h2>
+                <p>Our REST API provides predictable, resource-oriented URLs and uses standard HTTP verbs, authentication, and responses.</p>
+
+                <h2 id="authentication">Authentication</h2>
+                <p>Authenticate your account by including your secret API key in the request header.</p>
+                <pre>Authorization: Bearer YOUR_API_KEY</pre>
+
+                <h2 id="endpoints">Endpoints</h2>
+                
+                <h3 id="get-jobs" style="margin-top: 1.5rem;">List Jobs</h3>
+                <p>Retrieve a paginated list of normalized job data.</p>
+                <pre>GET /api/v1/jobs?skip=0&limit=50</pre>
+                
+                <h3 id="get-sources" style="margin-top: 1.5rem;">List Sources</h3>
+                <p>Get the health status and configurations of all active source adapters.</p>
+                <pre>GET /api/v1/sources</pre>
+
+                <h3 id="trigger" style="margin-top: 1.5rem;">Trigger Ingestion</h3>
+                <p>Manually trigger a sync for a specific source.</p>
+                <pre>POST /api/v1/ingest/{source_name}</pre>
+
+                <h2 id="rate-limits">Rate Limits</h2>
+                <p>Rate limits are enforced at the network edge based on your pricing tier. Standard tier defaults to 1,000 requests per IP address per day.</p>
+            </article>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 Ingestion Pipeline Systems. Built for engineering precision.</p>
+        </div>
+    </footer>
+</body>
+</html>

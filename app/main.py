@@ -86,13 +86,25 @@ def create_app() -> FastAPI:
     
     # --- Static Files ---
     from fastapi.staticfiles import StaticFiles
-    from fastapi.responses import RedirectResponse
+    from fastapi.responses import FileResponse
     
     app.mount("/static", StaticFiles(directory="static"), name="static")
     
     @app.get("/", include_in_schema=False)
     async def root():
-        return RedirectResponse(url="/static/index.html")
+        return FileResponse("static/landing.html")
+
+    @app.get("/pricing", include_in_schema=False)
+    async def pricing():
+        return FileResponse("static/pricing.html")
+
+    @app.get("/docs", include_in_schema=False)
+    async def docs():
+        return FileResponse("static/docs.html")
+
+    @app.get("/app", include_in_schema=False)
+    async def app_dashboard():
+        return FileResponse("static/index.html")
         
     return app
 
