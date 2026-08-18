@@ -203,14 +203,22 @@ h1, h2, h3, h4 {
     align-items: start;
 }
 
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
 /* Panels */
 .panel {
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
     padding: 1.5rem;
-    margin-bottom: 2rem;
     box-shadow: var(--panel-shadow);
+    min-width: 0; /* Prevents CSS Grid blowout from the wide table */
+    display: flex;
+    flex-direction: column;
 }
 
 .chaos-panel {
@@ -252,8 +260,11 @@ h1, h2, h3, h4 {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
-    padding: 1rem;
+    padding: 1.25rem;
     transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
 .source-card:hover {
@@ -271,7 +282,6 @@ h1, h2, h3, h4 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
 }
 
 .source-name {
@@ -318,7 +328,6 @@ h1, h2, h3, h4 {
     justify-content: space-between;
     font-size: 0.8rem;
     color: var(--text-muted);
-    margin-bottom: 1rem;
 }
 
 /* Buttons */
