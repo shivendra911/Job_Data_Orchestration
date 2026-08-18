@@ -114,134 +114,35 @@ h1, h2, h3, h4 {
     /* Kept same geometry as base */
 }
 
-/* Application Layout */
-.app-layout {
-    display: flex;
-    min-height: 100vh;
-    width: 100%;
+/* Layout */
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
-/* Sidebar */
-.global-sidebar {
-    width: 280px;
-    background: var(--bg-surface);
-    border-right: 1px solid var(--border-subtle);
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    z-index: 10;
-}
-
-[data-theme="brutalist"] .global-sidebar {
-    border-right-width: 2px;
-    border-right-color: var(--border-strong);
-}
-
-.sidebar-logo {
-    margin-bottom: 2.5rem;
-}
-
-.sidebar-logo h1 {
-    font-size: 1.25rem;
-    letter-spacing: -0.03em;
-}
-
-.sidebar-logo p {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-top: 0.25rem;
-}
-
-.sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex: 1;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9rem;
-    border-radius: var(--radius-md);
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
-}
-
-[data-theme="brutalist"] .nav-item {
-    border-radius: 0;
-}
-
-.nav-item:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
-}
-
-.nav-item.active {
-    background: var(--bg-active);
-    color: var(--text-primary);
-    border-color: var(--border-subtle);
-}
-
-[data-theme="brutalist"] .nav-item.active {
-    border-color: var(--border-strong);
-    box-shadow: 2px 2px 0px var(--border-strong);
-    transform: translate(-2px, -2px);
-}
-
-.sidebar-footer {
-    margin-top: auto;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border-subtle);
-}
-
-[data-theme="brutalist"] .sidebar-footer {
-    border-top-width: 2px;
-    border-top-color: var(--border-strong);
-}
-
-/* Main Container */
-.main-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0; /* Prevents flex blowout */
-    background: var(--bg-base);
-}
-
+/* Header */
 .main-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 2.5rem;
-    background: var(--bg-base);
-    border-bottom: 1px solid var(--border-subtle);
-    position: sticky;
-    top: 0;
-    z-index: 5;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2.5rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--panel-shadow);
 }
 
-[data-theme="brutalist"] .main-header {
-    border-bottom-width: 2px;
-    border-bottom-color: var(--border-strong);
+.logo h1 {
+    font-size: 1.25rem;
+    letter-spacing: -0.03em;
 }
 
-.page-title {
-    font-size: 1.5rem;
-}
-
-.page-content {
-    padding: 2.5rem;
-    flex: 1;
-    overflow-y: auto;
+.logo p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
 }
 
 .header-right {

@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnChaosTrigger = document.getElementById('btn-chaos-trigger');
     const btnChaosSpike = document.getElementById('btn-chaos-spike');
     const themeToggle = document.getElementById('theme-toggle');
+    const exportCsvBtn = document.getElementById('btn-export-csv');
+    const exportJsonBtn = document.getElementById('btn-export-json');
 
     // Init Theme from LocalStorage
     const savedTheme = localStorage.getItem('theme');
@@ -29,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (themeToggle) themeToggle.checked = true;
     }
 
-    // Init data
+    // Initial fetch
     fetchSources();
     fetchLogs();
     fetchJobs();
@@ -47,31 +49,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', fetchSources);
-    }
+    refreshBtn.addEventListener('click', fetchSources);
     
-    if (remoteToggle) {
-        remoteToggle.addEventListener('change', (e) => {
-            state.remoteOnly = e.target.checked;
-            state.skip = 0;
-            fetchJobs();
-        });
-    }
+    remoteToggle.addEventListener('change', (e) => {
+        state.remoteOnly = e.target.checked;
+        state.skip = 0;
+        fetchJobs();
+    });
 
-    if (prevPageBtn) {
-        prevPageBtn.addEventListener('click', () => {
-            if (state.skip > 0) {
-                state.skip -= state.limit;
-                fetchJobs();
-            }
-        });
-    }
+    prevPageBtn.addEventListener('click', () => {
+        if (state.skip > 0) {
+            state.skip -= state.limit;
+            fetchJobs();
+        }
+    });
 
     if (nextPageBtn) {
         nextPageBtn.addEventListener('click', () => {
             state.skip += state.limit;
             fetchJobs();
+        });
+    }
+
+    if (exportCsvBtn) {
+        exportCsvBtn.addEventListener('click', () => {
+            window.location.href = '/api/v1/jobs/export/csv';
+        });
+    }
+
+    if (exportJsonBtn) {
+        exportJsonBtn.addEventListener('click', () => {
+            window.location.href = '/api/v1/jobs/export/json';
         });
     }
     
@@ -138,8 +146,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function renderLogs(logs) {
+        if (!activityLogList) return;
+        activityLogList.innerHTML = '';
+        
+        if (logs.length === 0) {
+            activityLogList.innerHTML = '<div style="padding: 1rem; color: var(--text-muted);">No activity recorded yet.</div>';
+            return;
+        }
+
+        logs.forEach(log => {
+            const div = document.createElement('div');
+            div.style.padding = '0.75rem';
+            div.style.borderBottom = '1px solid var(--border-subtle)';
+            
+            const time = new Date(log.started_at).toLocaleTimeString();
+            let statusColor = log.status === 'completed' ? 'var(--status-success)' : 'var(--status-error)';
+            
+            div.innerHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                    <strong style="color: ${statusColor};">[${log.status.toUpperCase()}]</strong>
+                    <span style="color: var(--text-muted);">${time}</span>
+                </div>
+                <div>
+                    Scraped <strong>${log.source_name}</strong> - 
+                    ${log.jobs_new} new, ${log.jobs_updated} updated. 
+                    <span style="color: var(--text-muted); margin-left: 0.5rem;">(${log.duration_ms}ms)</span>
+                </div>
+                ${log.error_message ? `<div style="color: var(--status-error); margin-top: 0.5rem;">${log.error_message}</div>` : ''}
+            `;
+            activityLogList.appendChild(div);
+        });
+    }
+
     async function fetchJobs() {
-        if (!jobsTableBody) return;
         if (state.isLoadingJobs) return;
         state.isLoadingJobs = true;
         
@@ -165,27 +205,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function triggerIngestion(sourceName, buttonEl) {
-        buttonEl.disabled = true;
-        const originalText = buttonEl.innerHTML;
-        buttonEl.innerHTML = '<span class="spinner"></span> Running...';
+    async function triggerIngestion(sourceName, btn) {
+        if (btn.disabled) return;
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Running...';
+        btn.style.opacity = '0.7';
 
         try {
             const res = await fetch(`/api/v1/ingest/${sourceName}`, { method: 'POST' });
             if (!res.ok) throw new Error('Ingestion failed');
+            const data = await res.json();
+            console.log('Ingestion result:', data);
             
-            // Re-fetch to show new data
+            // Refresh views
+            fetchSources();
+            fetchLogs();
+            fetchJobs();
+            
+            // Show temporary success state
+            btn.textContent = 'Success!';
+            btn.style.backgroundColor = 'var(--status-success)';
+            btn.style.color = '#fff';
             setTimeout(() => {
-                fetchSources();
-                state.skip = 0;
-                fetchJobs();
-            }, 500);
-            
+                btn.disabled = false;
+                btn.textContent = originalText;
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+                btn.style.opacity = '1';
+            }, 2000);
         } catch (error) {
-            alert(`Failed to trigger ingestion for ${sourceName}`);
-        } finally {
-            buttonEl.disabled = false;
-            buttonEl.innerHTML = originalText;
+            console.error('Error:', error);
+            btn.textContent = 'Failed';
+            btn.style.backgroundColor = 'var(--status-error)';
+            btn.style.color = '#fff';
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = originalText;
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+                btn.style.opacity = '1';
+            }, 2000);
         }
     }
 
@@ -270,39 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const currentPage = Math.floor(state.skip / state.limit) + 1;
         pageIndicator.textContent = `Page ${currentPage}`;
-    }
-
-    function renderLogs(logs) {
-        if (!activityLogList) return;
-        activityLogList.innerHTML = '';
-        
-        if (logs.length === 0) {
-            activityLogList.innerHTML = '<div style="padding: 1rem; color: var(--text-muted);">No activity recorded yet.</div>';
-            return;
-        }
-
-        logs.forEach(log => {
-            const div = document.createElement('div');
-            div.style.padding = '0.75rem';
-            div.style.borderBottom = '1px solid var(--border-subtle)';
-            
-            const time = new Date(log.started_at).toLocaleTimeString();
-            let statusColor = log.status === 'completed' ? 'var(--status-success)' : 'var(--status-error)';
-            
-            div.innerHTML = `
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                    <strong style="color: ${statusColor};">[${log.status.toUpperCase()}]</strong>
-                    <span style="color: var(--text-muted);">${time}</span>
-                </div>
-                <div>
-                    Scraped <strong>${log.source_name}</strong> - 
-                    ${log.jobs_new} new, ${log.jobs_updated} updated. 
-                    <span style="color: var(--text-muted); margin-left: 0.5rem;">(${log.duration_ms}ms)</span>
-                </div>
-                ${log.error_message ? `<div style="color: var(--status-error); margin-top: 0.5rem;">${log.error_message}</div>` : ''}
-            `;
-            activityLogList.appendChild(div);
-        });
     }
 
     function formatK(num) {
