@@ -28,6 +28,7 @@ prometheus-client>=0.20.0
 
 # API Middleware
 slowapi>=0.1.9
+asgi-correlation-id>=4.3.1
 
 # Config
 python-dotenv>=1.0.0
