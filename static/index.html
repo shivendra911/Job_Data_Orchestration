@@ -3,25 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Ingestion Platform | Dashboard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <title>Data Ingestion Console</title>
+    <!-- Removed generic Google Fonts. Relying on system fonts and monospaced styles for the utilitarian look -->
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="background-mesh"></div>
     
     <div class="app-container">
-        <header class="glass-panel main-header">
+        <header class="main-header">
             <div class="logo">
-                <h1>Ingest<span>Hub</span></h1>
-                <p>Data Orchestration Pipeline</p>
+                <h1>Data Ingestion Console</h1>
+                <p>Pipeline Orchestration Interface // v1.0.0</p>
             </div>
             <div class="header-stats" id="global-stats">
                 <div class="stat-badge">
                     <span class="label">System Status</span>
-                    <span class="value success">Healthy</span>
+                    <span class="value success">[ ONLINE ]</span>
                 </div>
             </div>
         </header>
@@ -29,27 +26,27 @@
         <main class="dashboard-grid">
             <div class="sidebar">
                 <!-- Chaos Control Column (Sandbox) -->
-                <section class="chaos-panel glass-panel" style="border: 1px solid var(--status-error); background: rgba(239, 68, 68, 0.05); margin-bottom: 2rem;">
+                <section class="panel chaos-panel">
                     <div class="section-header">
-                        <h2 style="color: var(--status-error);">Chaos Control</h2>
+                        <h2>[ Chaos Control ]</h2>
                     </div>
-                    <div class="source-list" style="margin-bottom: 1rem; padding: 1.5rem;">
-                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                            Inject failures to test system resilience. The sandbox server randomly returns 502 Bad Gateway, 429 Too Many Requests, and slow responses.
+                    <div class="source-list">
+                        <p style="font-size: 0.9rem; margin-bottom: 1rem;">
+                            Inject network failures to test resilience. Sandbox returns 502, 429, or delays randomly.
                         </p>
-                        <button id="btn-chaos-trigger" class="btn btn-primary" style="background: var(--status-error); width: 100%; justify-content: center; margin-bottom: 0.5rem;">
-                            Trigger Sandbox Ingestion
+                        <button id="btn-chaos-trigger" class="btn btn-danger" style="width: 100%; margin-bottom: 0.5rem;">
+                            Trigger Ingestion
                         </button>
-                        <button id="btn-chaos-spike" class="btn btn-ghost" style="width: 100%; justify-content: center;">
-                            Simulate Traffic Spike (5x)
+                        <button id="btn-chaos-spike" class="btn btn-ghost" style="width: 100%; border-color: var(--status-error); color: var(--status-error);">
+                            Simulate Spike (5x)
                         </button>
                     </div>
                 </section>
     
                 <!-- Sources Column -->
-                <section class="sources-panel glass-panel">
+                <section class="panel">
                     <div class="section-header">
-                        <h2>Active Sources</h2>
+                        <h2>[ Active Sources ]</h2>
                         <button id="refresh-sources" class="btn btn-icon" title="Refresh Sources">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
                         </button>
@@ -63,9 +60,9 @@
             </div>
 
             <!-- Jobs Column -->
-            <section class="jobs-panel glass-panel">
+            <section class="panel">
                 <div class="section-header">
-                    <h2>Recent Ingested Jobs</h2>
+                    <h2>[ Ingested Data ]</h2>
                     <div class="filters">
                         <label class="toggle">
                             <input type="checkbox" id="remote-only">
@@ -113,7 +110,7 @@
             <div class="source-actions">
                 <button class="btn btn-primary btn-trigger">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                    Trigger Ingestion
+                    Ingest
                 </button>
             </div>
         </div>
