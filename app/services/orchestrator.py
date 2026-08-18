@@ -60,10 +60,20 @@ class IngestionOrchestrator:
             "duplicate": 0,
         }
 
+        from app.services.resilience import get_retry_policy, with_resilience
+        
         try:
-            # 4. Fetch (this would be wrapped in resilience later)
+            # 4. Fetch with resilience (circuit breaker + retries)
             log.info("orchestrator.fetching", source=source.name, run_id=str(run.id))
-            parsed_jobs = await adapter.fetch_jobs()
+            
+            retry_policy = get_retry_policy()
+            
+            async for attempt in retry_policy:
+                with attempt:
+                    parsed_jobs = await with_resilience(
+                        source.name, 
+                        adapter.fetch_jobs
+                    )
             
             # Note: We are simulating that the adapter itself returned parsed/valid jobs.
             # If the adapter dropped some invalid ones, we assume it logged it.
