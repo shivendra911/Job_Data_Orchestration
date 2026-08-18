@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
     
     # 1. Setup APScheduler
     if settings.SCHEDULER_ENABLED:
-        setup_scheduler(settings.DATABASE_URL)
+        await setup_scheduler(settings.DATABASE_URL)
         scheduler.start()
         log.info("app.startup.scheduler", message="Scheduler started")
         

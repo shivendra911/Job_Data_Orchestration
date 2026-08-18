@@ -33,6 +33,7 @@ class Source(Base):
     enabled: Mapped[bool] = mapped_column(Boolean, default=True)
     status: Mapped[str] = mapped_column(String(20), default="healthy")
     rate_limit_rpm: Mapped[int] = mapped_column(Integer, default=12)
+    schedule_interval_minutes: Mapped[int] = mapped_column(Integer, default=60)
     last_success_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     last_failure_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     failure_count: Mapped[int] = mapped_column(Integer, default=0)
