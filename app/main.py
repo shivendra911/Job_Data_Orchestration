@@ -85,15 +85,7 @@ def create_app() -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse, include_in_schema=False)
     async def dashboard_view(request: Request):
-        return templates.TemplateResponse("dashboard.html", {"request": request, "active_page": "dashboard"})
-
-    @app.get("/jobs", response_class=HTMLResponse, include_in_schema=False)
-    async def jobs_view(request: Request):
-        return templates.TemplateResponse("jobs.html", {"request": request, "active_page": "jobs"})
-
-    @app.get("/orchestration", response_class=HTMLResponse, include_in_schema=False)
-    async def orchestration_view(request: Request):
-        return templates.TemplateResponse("orchestration.html", {"request": request, "active_page": "orchestration"})
+        return templates.TemplateResponse(request=request, name="dashboard.html", context={"active_page": "dashboard"})
     
     # --- Routers ---
     app.include_router(api_router, prefix="/api/v1")

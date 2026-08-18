@@ -21,7 +21,7 @@ async def trigger_ingestion(
 ):
     """
     Manually trigger an ingestion run for a specific source.
-    The run happens in the background so we return a 202 Accepted immediately.
+    Runs synchronously and returns the metrics.
     """
     repo = SourceRepository(db)
     source = await repo.get_by_name(source_name)
@@ -32,22 +32,7 @@ async def trigger_ingestion(
     if not source.enabled:
         raise HTTPException(status_code=400, detail=f"Source '{source_name}' is disabled")
 
-    # To run in background properly without closing the session on return,
-    # we'd normally spawn a new session. For simplicity here, we'll run it synchronously 
-    # or pass a new session creator. Let's just run it synchronously for the MVP endpoint, 
-    # or use a new session if using background tasks.
-    
-    # We will just run it inline for now so we can return the metrics.
-    # In a true prod environment, this should be BackgroundTasks or Celery.
     orchestrator = IngestionOrchestrator(db)
     result = await orchestrator.run_ingestion(source_name)
     
     return result
-
-
-@router.get("/sources")
-async def list_sources(db: AsyncSession = Depends(get_db)):
-    """List all registered sources and their health status."""
-    repo = SourceRepository(db)
-    sources = await repo.get_all_enabled()
-    return sources

@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // DOM Elements
     const sourcesList = document.getElementById('sources-list');
+    const activityLogList = document.getElementById('activity-log-list');
     const jobsTableBody = document.getElementById('jobs-table-body');
     const sourceTemplate = document.getElementById('source-template');
     const refreshBtn = document.getElementById('refresh-sources');
@@ -27,6 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.setAttribute('data-theme', 'brutalist');
         if (themeToggle) themeToggle.checked = true;
     }
+
+    // Init data
+    fetchSources();
+    fetchLogs();
+    fetchJobs();
 
     // Event Listeners
     if (themeToggle) {
@@ -116,6 +122,19 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error:', error);
         } finally {
             state.isLoadingSources = false;
+        }
+    }
+
+    async function fetchLogs() {
+        if (!activityLogList) return;
+        try {
+            const res = await fetch('/api/v1/sources/logs');
+            if (!res.ok) throw new Error('Failed to fetch logs');
+            const data = await res.json();
+            renderLogs(data);
+        } catch (error) {
+            console.error('Error fetching logs:', error);
+            activityLogList.innerHTML = '<div style="color: var(--status-error); padding: 1rem;">Failed to load logs.</div>';
         }
     }
 
@@ -251,6 +270,39 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const currentPage = Math.floor(state.skip / state.limit) + 1;
         pageIndicator.textContent = `Page ${currentPage}`;
+    }
+
+    function renderLogs(logs) {
+        if (!activityLogList) return;
+        activityLogList.innerHTML = '';
+        
+        if (logs.length === 0) {
+            activityLogList.innerHTML = '<div style="padding: 1rem; color: var(--text-muted);">No activity recorded yet.</div>';
+            return;
+        }
+
+        logs.forEach(log => {
+            const div = document.createElement('div');
+            div.style.padding = '0.75rem';
+            div.style.borderBottom = '1px solid var(--border-subtle)';
+            
+            const time = new Date(log.started_at).toLocaleTimeString();
+            let statusColor = log.status === 'completed' ? 'var(--status-success)' : 'var(--status-error)';
+            
+            div.innerHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                    <strong style="color: ${statusColor};">[${log.status.toUpperCase()}]</strong>
+                    <span style="color: var(--text-muted);">${time}</span>
+                </div>
+                <div>
+                    Scraped <strong>${log.source_name}</strong> - 
+                    ${log.jobs_new} new, ${log.jobs_updated} updated. 
+                    <span style="color: var(--text-muted); margin-left: 0.5rem;">(${log.duration_ms}ms)</span>
+                </div>
+                ${log.error_message ? `<div style="color: var(--status-error); margin-top: 0.5rem;">${log.error_message}</div>` : ''}
+            `;
+            activityLogList.appendChild(div);
+        });
     }
 
     function formatK(num) {

@@ -16,12 +16,13 @@ def create_engine_and_session(
     database_url: str,
 ) -> tuple[AsyncEngine, async_sessionmaker[AsyncSession]]:
     is_serverless = "neon.tech" in database_url or "neon" in database_url
+    is_sqlite = "sqlite" in database_url
 
     engine_kwargs = {
         "echo": settings.DB_ECHO,
     }
 
-    if is_serverless:
+    if is_serverless or is_sqlite:
         engine_kwargs["poolclass"] = NullPool
     else:
         engine_kwargs["pool_size"] = settings.DB_POOL_SIZE

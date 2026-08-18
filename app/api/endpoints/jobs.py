@@ -38,6 +38,63 @@ async def list_jobs(
     return result.scalars().all()
 
 
+import csv
+import io
+from fastapi.responses import StreamingResponse
+
+@router.get("/export/csv", tags=["Export"])
+async def export_jobs_csv(db: AsyncSession = Depends(get_db)):
+    """Export all active jobs as a CSV file."""
+    stmt = select(Job).where(Job.is_active == True).order_by(Job.posted_at.desc().nulls_last())
+    result = await db.execute(stmt)
+    jobs = result.scalars().all()
+    
+    output = io.StringIO()
+    writer = csv.writer(output)
+    
+    # Write header
+    writer.writerow(["ID", "Title", "Company", "Remote", "URL", "Salary Min", "Salary Max", "Currency", "Location", "Posted At"])
+    
+    for job in jobs:
+        writer.writerow([
+            str(job.id),
+            job.title,
+            job.company,
+            str(job.remote),
+            job.url,
+            str(job.salary_min) if job.salary_min else "",
+            str(job.salary_max) if job.salary_max else "",
+            job.salary_currency or "",
+            job.location or "",
+            str(job.posted_at) if job.posted_at else ""
+        ])
+        
+    output.seek(0)
+    
+    return StreamingResponse(
+        iter([output.getvalue()]), 
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=jobs_export.csv"}
+    )
+
+import json
+
+@router.get("/export/json", tags=["Export"])
+async def export_jobs_json(db: AsyncSession = Depends(get_db)):
+    """Export all active jobs as a JSON file."""
+    stmt = select(Job).where(Job.is_active == True).order_by(Job.posted_at.desc().nulls_last())
+    result = await db.execute(stmt)
+    jobs = result.scalars().all()
+    
+    # We can serialize using Pydantic models directly or simple dict comprehension
+    jobs_data = [JobResponse.model_validate(job).model_dump(mode='json') for job in jobs]
+    
+    return StreamingResponse(
+        iter([json.dumps(jobs_data, indent=2)]),
+        media_type="application/json",
+        headers={"Content-Disposition": "attachment; filename=jobs_export.json"}
+    )
+
 @router.get("/{job_id}", response_model=JobResponse)
 async def get_job(job_id: UUID, db: AsyncSession = Depends(get_db)):
     """Get a specific job by ID."""

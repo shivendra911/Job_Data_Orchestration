@@ -50,11 +50,4 @@ class Settings(BaseSettings):
     REMOTIVE_URL: str = "https://remotive.com/api/remote-jobs"
     HN_ALGOLIA_URL: str = "https://hn.algolia.com/api/v1"
 
-    @field_validator("DATABASE_URL")
-    @classmethod
-    def validate_database_url(cls, v: str) -> str:
-        if not v.startswith("postgresql"):
-            raise ValueError("DATABASE_URL must be a PostgreSQL connection string")
-        return v
-
 settings = Settings()
