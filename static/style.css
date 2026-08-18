@@ -111,9 +111,7 @@ h1, h2, h3, h4 {
 
 [data-theme="brutalist"] h1, 
 [data-theme="brutalist"] h2 {
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: -0.05em;
+    /* Kept same geometry as base */
 }
 
 /* Layout */
@@ -239,8 +237,7 @@ h1, h2, h3, h4 {
 }
 
 [data-theme="brutalist"] .section-header {
-    border-bottom-color: var(--border-subtle);
-    padding-bottom: 1rem;
+    border-bottom-color: var(--border-strong);
 }
 
 .section-header h2 {
@@ -349,8 +346,6 @@ h1, h2, h3, h4 {
 
 [data-theme="brutalist"] .btn {
     border-color: var(--border-strong);
-    text-transform: uppercase;
-    font-weight: 800;
 }
 
 .btn-primary {
@@ -435,12 +430,9 @@ h1, h2, h3, h4 {
 }
 
 [data-theme="brutalist"] .jobs-table th {
-    text-transform: uppercase;
-    border-right: 2px solid var(--border-strong);
+    border-bottom: 1px solid var(--border-strong);
 }
-[data-theme="brutalist"] .jobs-table th:last-child {
-    border-right: none;
-}
+/* Removed brutalist th last-child */
 
 .jobs-table td {
     padding: 1rem;
@@ -449,12 +441,8 @@ h1, h2, h3, h4 {
     vertical-align: middle;
 }
 
-[data-theme="brutalist"] .jobs-table td {
-    border-right: 2px solid var(--border-subtle);
-}
-[data-theme="brutalist"] .jobs-table td:last-child {
-    border-right: none;
-}
+/* Removed brutalist td border-right */
+/* Removed brutalist td last-child */
 
 .jobs-table tbody tr {
     transition: background-color 0.15s ease;
@@ -493,8 +481,6 @@ h1, h2, h3, h4 {
 [data-theme="brutalist"] .tag {
     border-radius: 0;
     border-width: 1px;
-    text-transform: uppercase;
-    font-weight: 700;
 }
 
 /* Pagination */
@@ -573,10 +559,7 @@ input:checked + .slider:before {
     color: var(--text-primary);
 }
 
-[data-theme="brutalist"] .toggle-label {
-    text-transform: uppercase;
-    font-weight: 800;
-}
+/* Kept same geometry for toggle label */
 
 /* Loading Animations */
 .loading-pulse {
