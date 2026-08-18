@@ -28,24 +28,53 @@ fingerprinting, and serves them through a paginated REST API.
 ## Quick Start
 
 ```bash
-# Clone
+# Clone the repository
 git clone https://github.com/YOUR_USERNAME/job-ingestion-platform.git
 cd job-ingestion-platform
 
 # Copy environment file
 cp .env.example .env
+```
 
-# Start services (PostgreSQL + app + sandbox)
+### Option A: Local Development (Virtual Environment)
+
+**Using Standard Python venv:**
+```bash
+python -m venv .venv
+# Activate on Windows:
+.venv\Scripts\activate
+# Activate on macOS/Linux:
+source .venv/bin/activate
+
+pip install -r requirements.txt -r requirements-dev.txt
+```
+
+**Using Conda:**
+```bash
+conda env create -f environment.yml
+conda activate job-ingestion-env
+```
+
+**Run local server:**
+```bash
+make dev
+# Open http://localhost:8000
+```
+
+### Option B: Docker Compose (Full Stack)
+
+If you don't want to install Python locally, you can run the entire stack (PostgreSQL + App + Sandbox) via Docker:
+
+```bash
+# Start all services
 docker compose up -d
 
-# Run migrations
+# Run database migrations
 make migrate
+# (Or run `docker compose exec app alembic upgrade head` if Make isn't installed)
 
 # Open dashboard
-open http://localhost:8000
-
-# Open API docs
-open http://localhost:8000/api/docs
+# Open http://localhost:8000
 ```
 
 ## API Endpoints
