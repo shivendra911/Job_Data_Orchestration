@@ -124,9 +124,28 @@ class JobRepository:
             return
             
         fingerprints = [compute_fingerprint(j) for j in updated_jobs]
-        stmt = (
-            update(Job)
-            .where(Job.fingerprint.in_(fingerprints))
-            .values(last_seen_at=datetime.now(timezone.utc), is_active=True)
-        )
-        await self.session.execute(stmt)
+        
+        # We need to fetch the existing rows to modify their tags
+        stmt = select(Job).where(Job.fingerprint.in_(fingerprints))
+        result = await self.session.execute(stmt)
+        existing_jobs = result.scalars().all()
+        
+        # Build a map of fingerprint -> source_name from the incoming jobs
+        incoming_sources = {compute_fingerprint(j): j.source for j in updated_jobs}
+        
+        for job in existing_jobs:
+            job.last_seen_at = datetime.now(timezone.utc)
+            job.is_active = True
+            
+            incoming_source_name = incoming_sources.get(job.fingerprint)
+            
+            # Cross-source logic
+            if str(job.source_id) != str(source_id) and incoming_source_name:
+                tag = f"cross-posted-{incoming_source_name}"
+                current_tags = list(job.tags) if job.tags else []
+                if tag not in current_tags:
+                    current_tags.append(tag)
+                    # In SQLAlchemy, assigning a new list triggers the JSON mutation
+                    job.tags = current_tags
+                    
+        # the session will flush these updates automatically on commit

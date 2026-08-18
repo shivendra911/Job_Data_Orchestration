@@ -10,17 +10,27 @@ from app.models.database import Job
 from app.models.domain import JobCreate
 
 
+import re
+
+def _normalize_string(s: str | None) -> str:
+    if not s:
+        return ""
+    s = s.lower()
+    # Remove common modifiers
+    s = re.sub(r'\b(sr\.?|senior|jr\.?|junior|lead|principal|remote|hybrid)\b', '', s)
+    # Remove all non-alphanumeric characters (spaces, dashes, parens, emojis)
+    s = re.sub(r'[^a-z0-9]', '', s)
+    return s.strip()
+
 def compute_fingerprint(job: JobCreate) -> str:
     """
-    Computes a deterministic hash to uniquely identify a job.
-    Uses source + source_job_id if available, otherwise falls back to
-    source + title + company + location.
+    Computes a deterministic cross-source hash to uniquely identify a job.
+    Uses aggressively normalized title and company.
     """
-    if job.source_job_id:
-        seed = f"{job.source}::{job.source_job_id}".lower()
-    else:
-        seed = f"{job.source}::{job.title}::{job.company}::{job.location}".lower()
-
+    n_title = _normalize_string(job.title)
+    n_company = _normalize_string(job.company)
+    
+    seed = f"{n_company}::{n_title}"
     return hashlib.sha256(seed.encode("utf-8")).hexdigest()
 
 
