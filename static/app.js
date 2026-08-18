@@ -28,10 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (themeToggle) themeToggle.checked = true;
     }
 
-    // Init
-    fetchSources();
-    fetchJobs();
-
     // Event Listeners
     if (themeToggle) {
         themeToggle.addEventListener('change', (e) => {
@@ -45,25 +41,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    refreshBtn.addEventListener('click', fetchSources);
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', fetchSources);
+    }
     
-    remoteToggle.addEventListener('change', (e) => {
-        state.remoteOnly = e.target.checked;
-        state.skip = 0;
-        fetchJobs();
-    });
-
-    prevPageBtn.addEventListener('click', () => {
-        if (state.skip > 0) {
-            state.skip -= state.limit;
+    if (remoteToggle) {
+        remoteToggle.addEventListener('change', (e) => {
+            state.remoteOnly = e.target.checked;
+            state.skip = 0;
             fetchJobs();
-        }
-    });
+        });
+    }
 
-    nextPageBtn.addEventListener('click', () => {
-        state.skip += state.limit;
-        fetchJobs();
-    });
+    if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', () => {
+            if (state.skip > 0) {
+                state.skip -= state.limit;
+                fetchJobs();
+            }
+        });
+    }
+
+    if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', () => {
+            state.skip += state.limit;
+            fetchJobs();
+        });
+    }
     
     if (btnChaosTrigger) {
         btnChaosTrigger.addEventListener('click', (e) => {
@@ -99,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // API Calls
     async function fetchSources() {
+        if (!sourcesList) return;
         if (state.isLoadingSources) return;
         state.isLoadingSources = true;
         
@@ -115,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchJobs() {
+        if (!jobsTableBody) return;
         if (state.isLoadingJobs) return;
         state.isLoadingJobs = true;
         

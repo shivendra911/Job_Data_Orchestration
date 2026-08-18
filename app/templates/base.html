@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingest Pipeline - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    
+    <div class="app-layout">
+        <!-- Persistent Global Sidebar -->
+        <aside class="global-sidebar">
+            <div class="sidebar-logo">
+                <h1>DataSync</h1>
+                <p>Orchestration Engine</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="/" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Dashboard
+                </a>
+                <a href="/jobs" class="nav-item {% if active_page == 'jobs' %}active{% endif %}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    Data Explorer
+                </a>
+                <a href="/orchestration" class="nav-item {% if active_page == 'orchestration' %}active{% endif %}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    Orchestration
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="theme-switcher">
+                    <span style="font-size: 0.75rem;">Premium</span>
+                    <label class="toggle" title="Toggle Brutalist Theme">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span style="font-size: 0.75rem;">Brutalist</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-container">
+            <header class="main-header">
+                <div>
+                    <h2 class="page-title">{% block page_title %}{% endblock %}</h2>
+                </div>
+                <div class="header-right">
+                    <div class="stat-badge" id="global-stats">
+                        <span class="indicator"></span>
+                        <span class="label">System Operational</span>
+                    </div>
+                </div>
+            </header>
+
+            <main class="page-content">
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Required for components to fetch properly -->
+    <script src="/static/app.js"></script>
+    {% block extra_scripts %}
+    {% endblock %}
+</body>
+</html>

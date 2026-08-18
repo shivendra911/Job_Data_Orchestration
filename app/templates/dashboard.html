@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <!-- Quick Stats Cards (New for Dashboard) -->
+    <section class="panel stat-card" style="margin-bottom: 0;">
+        <h3 style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">Total Jobs Ingested</h3>
+        <p id="stat-total-jobs" style="font-size: 2rem; font-weight: 700; margin-top: 0.5rem;" class="mono">--</p>
+    </section>
+    
+    <section class="panel stat-card" style="margin-bottom: 0;">
+        <h3 style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">Active Sources</h3>
+        <p id="stat-active-sources" style="font-size: 2rem; font-weight: 700; margin-top: 0.5rem;" class="mono">--</p>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Just fetch lightweight data for the dashboard
+    fetch('/api/v1/jobs/summary')
+        .then(res => res.json())
+        .then(data => {
+            const el = document.getElementById('stat-total-jobs');
+            if(el) el.textContent = data.total_jobs || '0';
+        })
+        .catch(err => console.error(err));
+        
+    fetchSources().then(() => {
+        const list = document.getElementById('sources-list');
+        if(list && document.getElementById('stat-active-sources')) {
+            // Count cards
+            document.getElementById('stat-active-sources').textContent = list.children.length;
+        }
+    });
+</script>
+{% endblock %}

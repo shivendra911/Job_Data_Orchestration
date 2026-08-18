@@ -3,17 +3,22 @@ FastAPI application factory.
 """
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from prometheus_client import make_asgi_app
 import structlog
-from asgi_correlation_id import CorrelationIdMiddleware
 
 from app.api.router import api_router
 from app.api.deps import engine
 from app.core.config import settings
 from app.core.logging import configure_logging
 from app.scheduler import scheduler, setup_scheduler
+
+# Ensure adapters are registered via their decorators
+import app.adapters  # noqa: F401
 
 # Configure structured logging before app startup
 configure_logging(settings.ENVIRONMENT)
@@ -49,6 +54,13 @@ async def lifespan(app: FastAPI):
 def create_app() -> FastAPI:
     """Factory to create the FastAPI application."""
     
+    # Try to import CorrelationIdMiddleware, but don't crash if missing
+    try:
+        from asgi_correlation_id import CorrelationIdMiddleware
+        has_correlation_id = True
+    except ImportError:
+        has_correlation_id = False
+    
     app = FastAPI(
         title=settings.APP_NAME,
         version="1.0.0",
@@ -58,7 +70,8 @@ def create_app() -> FastAPI:
     )
     
     # --- Middleware ---
-    app.add_middleware(CorrelationIdMiddleware)
+    if has_correlation_id:
+        app.add_middleware(CorrelationIdMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.CORS_ORIGINS,
@@ -66,6 +79,21 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    
+    # --- Frontend UI Routes ---
+    templates = Jinja2Templates(directory="app/templates")
+
+    @app.get("/", response_class=HTMLResponse, include_in_schema=False)
+    async def dashboard_view(request: Request):
+        return templates.TemplateResponse("dashboard.html", {"request": request, "active_page": "dashboard"})
+
+    @app.get("/jobs", response_class=HTMLResponse, include_in_schema=False)
+    async def jobs_view(request: Request):
+        return templates.TemplateResponse("jobs.html", {"request": request, "active_page": "jobs"})
+
+    @app.get("/orchestration", response_class=HTMLResponse, include_in_schema=False)
+    async def orchestration_view(request: Request):
+        return templates.TemplateResponse("orchestration.html", {"request": request, "active_page": "orchestration"})
     
     # --- Routers ---
     app.include_router(api_router, prefix="/api/v1")
@@ -77,22 +105,14 @@ def create_app() -> FastAPI:
         
     @app.get("/api/v1/health/ready", tags=["Health"])
     async def readiness_probe():
-        # In a real app, verify DB connection here
         return {"status": "ready"}
         
     # --- Prometheus Metrics ---
     metrics_app = make_asgi_app()
     app.mount("/metrics", metrics_app)
     
-    # --- Static Files ---
-    from fastapi.staticfiles import StaticFiles
-    from fastapi.responses import RedirectResponse
-    
+    # --- Static Files (mount LAST — it's a catch-all for /static/*) ---
     app.mount("/static", StaticFiles(directory="static"), name="static")
-    
-    @app.get("/", include_in_schema=False)
-    async def root():
-        return RedirectResponse(url="/static/index.html")
         
     return app
 

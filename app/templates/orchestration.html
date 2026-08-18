@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Orchestration{% endblock %}
+{% block page_title %}Orchestration Engine{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <div class="sidebar">
+        <!-- Chaos Control Column (Sandbox) -->
+        <section class="panel chaos-panel">
+            <div class="section-header">
+                <h2>Chaos Control</h2>
+            </div>
+            <div class="source-list">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5;">
+                    Inject network failures to test system resilience. The sandbox environment simulates 502s, 429s, and high latency.
+                </p>
+                <button id="btn-chaos-trigger" class="btn btn-danger" style="width: 100%; margin-bottom: 0.5rem;">
+                    Trigger Simulation
+                </button>
+                <button id="btn-chaos-spike" class="btn btn-ghost" style="width: 100%; border-color: rgba(239, 68, 68, 0.2); color: var(--status-error);">
+                    Simulate Spike (5x)
+                </button>
+            </div>
+        </section>
+
+        <!-- Sources Column -->
+        <section class="panel">
+            <div class="section-header">
+                <h2>Active Sources</h2>
+                <button id="refresh-sources" class="btn btn-icon" title="Refresh Sources">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                </button>
+            </div>
+            <div id="sources-list" class="source-list">
+                <!-- Populated by JS -->
+                <div class="loading-pulse"></div>
+                <div class="loading-pulse"></div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- Template for Source Card -->
+<template id="source-template">
+    <div class="source-card">
+        <div class="source-header">
+            <h3 class="source-name"></h3>
+            <span class="status-badge"></span>
+        </div>
+        <div class="source-meta">
+            <span class="adapter-type mono"></span>
+            <span class="last-run mono"></span>
+        </div>
+        <div class="source-actions">
+            <button class="btn btn-primary btn-trigger" style="width: 100%;">
+                Ingest Now
+            </button>
+        </div>
+    </div>
+</template>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    fetchSources();
+</script>
+{% endblock %}
