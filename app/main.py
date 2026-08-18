@@ -84,6 +84,16 @@ def create_app() -> FastAPI:
     metrics_app = make_asgi_app()
     app.mount("/metrics", metrics_app)
     
+    # --- Static Files ---
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.responses import RedirectResponse
+    
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+    
+    @app.get("/", include_in_schema=False)
+    async def root():
+        return RedirectResponse(url="/static/index.html")
+        
     return app
 
 
