@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-    /* Premium Dark Theme */
+    /* DEFAULT: Premium Dark Theme */
     --bg-base: #000000;
     --bg-surface: #0a0a0a;
     --bg-card: #111111;
@@ -17,7 +17,6 @@
     
     --accent-blue: #3b82f6;
     --accent-blue-hover: #2563eb;
-    --accent-glow: rgba(59, 130, 246, 0.15);
     
     --status-success: #10b981;
     --status-success-bg: rgba(16, 185, 129, 0.1);
@@ -34,6 +33,55 @@
     
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    
+    --font-ui: 'Inter', -apple-system, sans-serif;
+    --border-width: 1px;
+    --panel-shadow: var(--shadow-sm);
+    
+    --btn-transform: translateY(-1px);
+    --btn-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+[data-theme="brutalist"] {
+    /* OVERRIDE: Neo-Brutalist Light Theme */
+    --bg-base: #f4f4f0;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-hover: #f0f0f0;
+    --bg-active: #e5e5e5;
+    
+    --border-subtle: #111111;
+    --border-strong: #000000;
+    
+    --text-primary: #111111;
+    --text-secondary: #444444;
+    --text-muted: #666666;
+    
+    --accent-blue: #0000ff;
+    --accent-blue-hover: #0000cc;
+    
+    --status-success: #008800;
+    --status-success-bg: #e6ffe6;
+    
+    --status-warning: #ff8800;
+    --status-warning-bg: #fff3e6;
+    
+    --status-error: #ff0000;
+    --status-error-bg: #ffe6e6;
+    
+    --radius-sm: 0px;
+    --radius-md: 0px;
+    --radius-lg: 0px;
+    
+    --shadow-sm: none;
+    --shadow-md: none;
+    
+    --font-ui: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --border-width: 2px;
+    
+    --panel-shadow: 4px 4px 0px var(--border-strong);
+    --btn-transform: translate(2px, 2px);
+    --btn-shadow: none;
 }
 
 * {
@@ -43,13 +91,14 @@
 }
 
 body {
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: var(--font-ui);
     background-color: var(--bg-base);
     color: var(--text-primary);
     line-height: 1.5;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Typography Utilities */
@@ -61,6 +110,13 @@ h1, h2, h3, h4 {
     color: var(--text-primary);
     font-weight: 600;
     letter-spacing: -0.02em;
+}
+
+[data-theme="brutalist"] h1, 
+[data-theme="brutalist"] h2 {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
 }
 
 /* Layout */
@@ -75,14 +131,16 @@ h1, h2, h3, h4 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.25rem 0;
+    padding: 1.25rem 1.5rem;
     margin-bottom: 2.5rem;
-    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    border: var(--border-width) solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--panel-shadow);
 }
 
 .logo h1 {
     font-size: 1.25rem;
-    font-weight: 600;
     letter-spacing: -0.03em;
 }
 
@@ -92,14 +150,33 @@ h1, h2, h3, h4 {
     margin-top: 0.25rem;
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.theme-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
 .stat-badge {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     padding: 0.5rem 1rem;
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
+    background: var(--bg-base);
+    border: var(--border-width) solid var(--border-subtle);
     border-radius: 99px;
+}
+
+[data-theme="brutalist"] .stat-badge {
+    border-radius: 0;
 }
 
 .stat-badge .indicator {
@@ -110,10 +187,15 @@ h1, h2, h3, h4 {
     box-shadow: 0 0 8px var(--status-success);
 }
 
+[data-theme="brutalist"] .stat-badge .indicator {
+    border-radius: 0;
+    box-shadow: none;
+}
+
 .stat-badge .label {
     font-size: 0.8rem;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: var(--text-primary);
 }
 
 /* Grid Layout */
@@ -127,16 +209,20 @@ h1, h2, h3, h4 {
 /* Panels */
 .panel {
     background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
+    border: var(--border-width) solid var(--border-subtle);
     border-radius: var(--radius-lg);
     padding: 1.5rem;
     margin-bottom: 2rem;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--panel-shadow);
 }
 
 .chaos-panel {
-    border-color: var(--border-subtle);
-    background: linear-gradient(180deg, var(--bg-card) 0%, rgba(239, 68, 68, 0.03) 100%);
+    border-color: var(--status-error);
+    background: var(--status-error-bg);
+}
+
+[data-theme="brutalist"] .chaos-panel {
+    background: #fff5f5;
 }
 
 .section-header {
@@ -144,24 +230,30 @@ h1, h2, h3, h4 {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.25rem;
+    border-bottom: 1px solid transparent;
+}
+
+[data-theme="brutalist"] .section-header {
+    border-bottom-color: var(--border-subtle);
+    padding-bottom: 1rem;
 }
 
 .section-header h2 {
     font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 /* Source Cards */
 .source-list {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
 .source-card {
     background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
+    border: var(--border-width) solid var(--border-subtle);
     border-radius: var(--radius-md);
     padding: 1rem;
     transition: all 0.2s ease;
@@ -170,6 +262,12 @@ h1, h2, h3, h4 {
 .source-card:hover {
     border-color: var(--border-strong);
     background: var(--bg-hover);
+    transform: translateY(-2px);
+}
+
+[data-theme="brutalist"] .source-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px var(--border-strong);
 }
 
 .source-header {
@@ -181,7 +279,7 @@ h1, h2, h3, h4 {
 
 .source-name {
     font-size: 0.95rem;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .status-badge {
@@ -190,27 +288,32 @@ h1, h2, h3, h4 {
     padding: 0.15rem 0.5rem;
     border-radius: 99px;
     font-size: 0.7rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
+}
+
+[data-theme="brutalist"] .status-badge {
+    border-radius: 0;
+    border-width: 2px;
 }
 
 .status-healthy {
     background: var(--status-success-bg);
     color: var(--status-success);
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    border: 1px solid var(--status-success);
 }
 
 .status-degraded {
     background: var(--status-warning-bg);
     color: var(--status-warning);
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    border: 1px solid var(--status-warning);
 }
 
 .status-error {
     background: var(--status-error-bg);
     color: var(--status-error);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    border: 1px solid var(--status-error);
 }
 
 .source-meta {
@@ -228,30 +331,41 @@ h1, h2, h3, h4 {
     justify-content: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-ui);
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 600;
     border-radius: var(--radius-md);
     cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
+    border: var(--border-width) solid transparent;
+    transition: all 0.15s ease;
     text-decoration: none;
+}
+
+[data-theme="brutalist"] .btn {
+    border-color: var(--border-strong);
+    text-transform: uppercase;
+    font-weight: 800;
 }
 
 .btn-primary {
     background: var(--text-primary);
-    color: var(--bg-base);
+    color: var(--bg-surface);
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: #ffffff;
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+    transform: var(--btn-transform);
+    box-shadow: var(--btn-shadow);
+}
+
+[data-theme="brutalist"] .btn-primary {
+    background: var(--accent-blue);
+    color: white;
 }
 
 .btn-ghost {
     background: transparent;
     color: var(--text-secondary);
-    border: 1px solid var(--border-subtle);
+    border: var(--border-width) solid var(--border-subtle);
 }
 
 .btn-ghost:hover:not(:disabled) {
@@ -262,11 +376,12 @@ h1, h2, h3, h4 {
 .btn-danger {
     background: var(--status-error-bg);
     color: var(--status-error);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    border: var(--border-width) solid var(--status-error);
 }
 
 .btn-danger:hover:not(:disabled) {
-    background: rgba(239, 68, 68, 0.15);
+    background: var(--status-error);
+    color: white;
 }
 
 .btn:disabled {
@@ -279,6 +394,11 @@ h1, h2, h3, h4 {
     color: var(--text-muted);
     background: transparent;
     border-radius: var(--radius-md);
+    border: var(--border-width) solid transparent;
+}
+
+[data-theme="brutalist"] .btn-icon {
+    border-color: var(--border-strong);
 }
 
 .btn-icon:hover {
@@ -289,7 +409,7 @@ h1, h2, h3, h4 {
 /* Table */
 .table-container {
     overflow-x: auto;
-    border: 1px solid var(--border-subtle);
+    border: var(--border-width) solid var(--border-subtle);
     border-radius: var(--radius-md);
 }
 
@@ -302,17 +422,32 @@ h1, h2, h3, h4 {
 .jobs-table th {
     text-align: left;
     padding: 0.875rem 1rem;
-    background: var(--bg-surface);
-    color: var(--text-muted);
-    font-weight: 500;
-    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-active);
+    color: var(--text-primary);
+    font-weight: 600;
+    border-bottom: var(--border-width) solid var(--border-subtle);
+}
+
+[data-theme="brutalist"] .jobs-table th {
+    text-transform: uppercase;
+    border-right: 2px solid var(--border-strong);
+}
+[data-theme="brutalist"] .jobs-table th:last-child {
+    border-right: none;
 }
 
 .jobs-table td {
     padding: 1rem;
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: var(--border-width) solid var(--border-subtle);
     color: var(--text-secondary);
     vertical-align: middle;
+}
+
+[data-theme="brutalist"] .jobs-table td {
+    border-right: 2px solid var(--border-subtle);
+}
+[data-theme="brutalist"] .jobs-table td:last-child {
+    border-right: none;
 }
 
 .jobs-table tbody tr {
@@ -329,7 +464,7 @@ h1, h2, h3, h4 {
 
 .job-title {
     color: var(--text-primary);
-    font-weight: 500;
+    font-weight: 600;
     text-decoration: none;
     transition: color 0.15s ease;
 }
@@ -346,7 +481,14 @@ h1, h2, h3, h4 {
     border: 1px solid var(--border-subtle);
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.7rem;
-    color: var(--text-secondary);
+    color: var(--text-primary);
+}
+
+[data-theme="brutalist"] .tag {
+    border-radius: 0;
+    border-width: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
 }
 
 /* Pagination */
@@ -370,25 +512,34 @@ h1, h2, h3, h4 {
 .toggle input { display: none; }
 
 .slider {
-    width: 32px;
-    height: 18px;
-    background-color: var(--bg-hover);
+    width: 36px;
+    height: 20px;
+    background-color: var(--bg-active);
     border-radius: 99px;
     position: relative;
     transition: 0.2s ease;
-    border: 1px solid var(--border-subtle);
+    border: var(--border-width) solid var(--border-strong);
+}
+
+[data-theme="brutalist"] .slider {
+    border-radius: 0;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 12px;
-    width: 12px;
+    height: 14px;
+    width: 14px;
     left: 2px;
-    bottom: 2px;
+    bottom: 1px;
     background-color: var(--text-muted);
     border-radius: 50%;
     transition: 0.2s ease;
+}
+
+[data-theme="brutalist"] .slider:before {
+    border-radius: 0;
+    background-color: var(--text-primary);
 }
 
 input:checked + .slider {
@@ -396,24 +547,42 @@ input:checked + .slider {
     border-color: var(--text-primary);
 }
 
+[data-theme="brutalist"] input:checked + .slider {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
 input:checked + .slider:before {
-    transform: translateX(14px);
+    transform: translateX(16px);
     background-color: var(--bg-base);
+}
+
+[data-theme="brutalist"] input:checked + .slider:before {
+    background-color: white;
 }
 
 .toggle-label {
     font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--text-secondary);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+[data-theme="brutalist"] .toggle-label {
+    text-transform: uppercase;
+    font-weight: 800;
 }
 
 /* Loading Animations */
 .loading-pulse {
     height: 90px;
     background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
+    border: var(--border-width) solid var(--border-subtle);
     border-radius: var(--radius-md);
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+[data-theme="brutalist"] .loading-pulse {
+    border-radius: 0;
 }
 
 @keyframes pulse {

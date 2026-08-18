@@ -19,12 +19,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageIndicator = document.getElementById('page-indicator');
     const btnChaosTrigger = document.getElementById('btn-chaos-trigger');
     const btnChaosSpike = document.getElementById('btn-chaos-spike');
+    const themeToggle = document.getElementById('theme-toggle');
+
+    // Init Theme from LocalStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'brutalist') {
+        document.body.setAttribute('data-theme', 'brutalist');
+        if (themeToggle) themeToggle.checked = true;
+    }
 
     // Init
     fetchSources();
     fetchJobs();
 
     // Event Listeners
+    if (themeToggle) {
+        themeToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                document.body.setAttribute('data-theme', 'brutalist');
+                localStorage.setItem('theme', 'brutalist');
+            } else {
+                document.body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'premium');
+            }
+        });
+    }
+
     refreshBtn.addEventListener('click', fetchSources);
     
     remoteToggle.addEventListener('change', (e) => {
