@@ -1,0 +1,60 @@
+"""
+Centralized configuration using pydantic-settings.
+
+Reads from:
+  1. Environment variables (highest priority)
+  2. .env file (if present)
+  3. Default values (lowest priority)
+"""
+from pydantic import field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+    )
+
+    # --- App ---
+    ENVIRONMENT: str = "development"
+    APP_NAME: str = "job-ingestion-platform"
+    DEBUG: bool = False
+
+    # --- Database ---
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/jobingestion"
+    DB_POOL_SIZE: int = 5
+    DB_MAX_OVERFLOW: int = 10
+    DB_ECHO: bool = False
+
+    # --- API ---
+    API_RATE_LIMIT: str = "100/minute"
+    CORS_ORIGINS: list[str] = ["*"]
+
+    # --- Ingestion ---
+    SCHEDULER_ENABLED: bool = True
+    INGESTION_INTERVAL_MINUTES: int = 60
+    BATCH_INVALID_THRESHOLD: float = 0.30
+    DEFAULT_RATE_LIMIT_RPM: int = 12
+    HTTP_TIMEOUT_SECONDS: float = 30.0
+    MAX_RETRY_ATTEMPTS: int = 4
+    CIRCUIT_BREAKER_FAIL_MAX: int = 3
+    CIRCUIT_BREAKER_RESET_TIMEOUT: int = 120
+
+    # --- Sandbox ---
+    SANDBOX_URL: str = "http://localhost:8001"
+
+    # --- Source URLs ---
+    ARBEITNOW_URL: str = "https://www.arbeitnow.com/api/job-board-api"
+    REMOTIVE_URL: str = "https://remotive.com/api/remote-jobs"
+    HN_ALGOLIA_URL: str = "https://hn.algolia.com/api/v1"
+
+    @field_validator("DATABASE_URL")
+    @classmethod
+    def validate_database_url(cls, v: str) -> str:
+        if not v.startswith("postgresql"):
+            raise ValueError("DATABASE_URL must be a PostgreSQL connection string")
+        return v
+
+settings = Settings()
