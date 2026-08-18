@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clone.querySelector('.source-name').textContent = source.name;
             clone.querySelector('.adapter-type').textContent = source.adapter_type;
             
-            const statusEl = clone.querySelector('.status-indicator');
+            const statusEl = clone.querySelector('.status-badge');
             statusEl.textContent = source.status;
             
             if (source.status === 'healthy') {

@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Ingestion Console</title>
-    <!-- Removed generic Google Fonts. Relying on system fonts and monospaced styles for the utilitarian look -->
+    <title>Ingest Pipeline</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -12,13 +11,13 @@
     <div class="app-container">
         <header class="main-header">
             <div class="logo">
-                <h1>Data Ingestion Console</h1>
-                <p>Pipeline Orchestration Interface // v1.0.0</p>
+                <h1>Ingestion Pipeline</h1>
+                <p>Data Orchestration & Sync</p>
             </div>
             <div class="header-stats" id="global-stats">
                 <div class="stat-badge">
-                    <span class="label">System Status</span>
-                    <span class="value success">[ ONLINE ]</span>
+                    <span class="indicator"></span>
+                    <span class="label">System Operational</span>
                 </div>
             </div>
         </header>
@@ -28,16 +27,16 @@
                 <!-- Chaos Control Column (Sandbox) -->
                 <section class="panel chaos-panel">
                     <div class="section-header">
-                        <h2>[ Chaos Control ]</h2>
+                        <h2>Chaos Control</h2>
                     </div>
                     <div class="source-list">
-                        <p style="font-size: 0.9rem; margin-bottom: 1rem;">
-                            Inject network failures to test resilience. Sandbox returns 502, 429, or delays randomly.
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5;">
+                            Inject network failures to test system resilience. The sandbox environment simulates 502s, 429s, and high latency.
                         </p>
                         <button id="btn-chaos-trigger" class="btn btn-danger" style="width: 100%; margin-bottom: 0.5rem;">
-                            Trigger Ingestion
+                            Trigger Simulation
                         </button>
-                        <button id="btn-chaos-spike" class="btn btn-ghost" style="width: 100%; border-color: var(--status-error); color: var(--status-error);">
+                        <button id="btn-chaos-spike" class="btn btn-ghost" style="width: 100%; border-color: rgba(239, 68, 68, 0.2); color: var(--status-error);">
                             Simulate Spike (5x)
                         </button>
                     </div>
@@ -46,7 +45,7 @@
                 <!-- Sources Column -->
                 <section class="panel">
                     <div class="section-header">
-                        <h2>[ Active Sources ]</h2>
+                        <h2>Active Sources</h2>
                         <button id="refresh-sources" class="btn btn-icon" title="Refresh Sources">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
                         </button>
@@ -62,7 +61,7 @@
             <!-- Jobs Column -->
             <section class="panel">
                 <div class="section-header">
-                    <h2>[ Ingested Data ]</h2>
+                    <h2>Ingested Data</h2>
                     <div class="filters">
                         <label class="toggle">
                             <input type="checkbox" id="remote-only">
@@ -89,7 +88,7 @@
                 </div>
                 <div class="pagination">
                     <button class="btn btn-ghost" id="prev-page" disabled>Previous</button>
-                    <span id="page-indicator">Page 1</span>
+                    <span id="page-indicator" class="mono">Page 1</span>
                     <button class="btn btn-ghost" id="next-page">Next</button>
                 </div>
             </section>
@@ -101,16 +100,15 @@
         <div class="source-card">
             <div class="source-header">
                 <h3 class="source-name"></h3>
-                <span class="status-indicator"></span>
+                <span class="status-badge"></span>
             </div>
             <div class="source-meta">
-                <span class="adapter-type"></span>
-                <span class="last-run"></span>
+                <span class="adapter-type mono"></span>
+                <span class="last-run mono"></span>
             </div>
             <div class="source-actions">
-                <button class="btn btn-primary btn-trigger">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                    Ingest
+                <button class="btn btn-primary btn-trigger" style="width: 100%;">
+                    Ingest Now
                 </button>
             </div>
         </div>
