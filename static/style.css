@@ -34,10 +34,7 @@
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
     
-    --font-ui: 'Inter', -apple-system, sans-serif;
-    --border-width: 1px;
     --panel-shadow: var(--shadow-sm);
-    
     --btn-transform: translateY(-1px);
     --btn-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
@@ -76,9 +73,6 @@
     --shadow-sm: none;
     --shadow-md: none;
     
-    --font-ui: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --border-width: 2px;
-    
     --panel-shadow: 4px 4px 0px var(--border-strong);
     --btn-transform: translate(2px, 2px);
     --btn-shadow: none;
@@ -88,17 +82,20 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    /* Add smooth transitions globally for colors and borders to ensure the theme switch is elegant */
+    transition-property: background-color, border-color, color, box-shadow, border-radius, transform;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
 }
 
 body {
-    font-family: var(--font-ui);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: var(--bg-base);
     color: var(--text-primary);
     line-height: 1.5;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Typography Utilities */
@@ -134,7 +131,7 @@ h1, h2, h3, h4 {
     padding: 1.25rem 1.5rem;
     margin-bottom: 2.5rem;
     background: var(--bg-surface);
-    border: var(--border-width) solid var(--border-subtle);
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
     box-shadow: var(--panel-shadow);
 }
@@ -171,7 +168,7 @@ h1, h2, h3, h4 {
     gap: 0.75rem;
     padding: 0.5rem 1rem;
     background: var(--bg-base);
-    border: var(--border-width) solid var(--border-subtle);
+    border: 1px solid var(--border-subtle);
     border-radius: 99px;
 }
 
@@ -209,7 +206,7 @@ h1, h2, h3, h4 {
 /* Panels */
 .panel {
     background: var(--bg-card);
-    border: var(--border-width) solid var(--border-subtle);
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
     padding: 1.5rem;
     margin-bottom: 2rem;
@@ -253,7 +250,7 @@ h1, h2, h3, h4 {
 
 .source-card {
     background: var(--bg-surface);
-    border: var(--border-width) solid var(--border-subtle);
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     padding: 1rem;
     transition: all 0.2s ease;
@@ -295,7 +292,7 @@ h1, h2, h3, h4 {
 
 [data-theme="brutalist"] .status-badge {
     border-radius: 0;
-    border-width: 2px;
+    border-width: 1px;
 }
 
 .status-healthy {
@@ -336,7 +333,7 @@ h1, h2, h3, h4 {
     font-weight: 600;
     border-radius: var(--radius-md);
     cursor: pointer;
-    border: var(--border-width) solid transparent;
+    border: 1px solid transparent;
     transition: all 0.15s ease;
     text-decoration: none;
 }
@@ -365,7 +362,7 @@ h1, h2, h3, h4 {
 .btn-ghost {
     background: transparent;
     color: var(--text-secondary);
-    border: var(--border-width) solid var(--border-subtle);
+    border: 1px solid var(--border-subtle);
 }
 
 .btn-ghost:hover:not(:disabled) {
@@ -376,7 +373,7 @@ h1, h2, h3, h4 {
 .btn-danger {
     background: var(--status-error-bg);
     color: var(--status-error);
-    border: var(--border-width) solid var(--status-error);
+    border: 1px solid var(--status-error);
 }
 
 .btn-danger:hover:not(:disabled) {
@@ -394,7 +391,7 @@ h1, h2, h3, h4 {
     color: var(--text-muted);
     background: transparent;
     border-radius: var(--radius-md);
-    border: var(--border-width) solid transparent;
+    border: 1px solid transparent;
 }
 
 [data-theme="brutalist"] .btn-icon {
@@ -409,7 +406,7 @@ h1, h2, h3, h4 {
 /* Table */
 .table-container {
     overflow-x: auto;
-    border: var(--border-width) solid var(--border-subtle);
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
 }
 
@@ -425,7 +422,7 @@ h1, h2, h3, h4 {
     background: var(--bg-active);
     color: var(--text-primary);
     font-weight: 600;
-    border-bottom: var(--border-width) solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 [data-theme="brutalist"] .jobs-table th {
@@ -438,7 +435,7 @@ h1, h2, h3, h4 {
 
 .jobs-table td {
     padding: 1rem;
-    border-bottom: var(--border-width) solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
     color: var(--text-secondary);
     vertical-align: middle;
 }
@@ -486,7 +483,7 @@ h1, h2, h3, h4 {
 
 [data-theme="brutalist"] .tag {
     border-radius: 0;
-    border-width: 2px;
+    border-width: 1px;
     text-transform: uppercase;
     font-weight: 700;
 }
@@ -518,7 +515,7 @@ h1, h2, h3, h4 {
     border-radius: 99px;
     position: relative;
     transition: 0.2s ease;
-    border: var(--border-width) solid var(--border-strong);
+    border: 1px solid var(--border-strong);
 }
 
 [data-theme="brutalist"] .slider {
@@ -576,7 +573,7 @@ input:checked + .slider:before {
 .loading-pulse {
     height: 90px;
     background: var(--bg-surface);
-    border: var(--border-width) solid var(--border-subtle);
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
