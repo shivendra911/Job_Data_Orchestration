@@ -350,12 +350,35 @@ document.addEventListener('DOMContentLoaded', () => {
         if (searchStatsText) searchStatsText.textContent = `Showing ${filteredJobs.length} open position${filteredJobs.length !== 1 ? 's' : ''}`;
 
         if (filteredJobs.length === 0) {
-            jobsContainer.innerHTML = `
-                <div class="job-card" style="text-align: center; padding: 4rem 2rem; border-style: dashed; cursor: default;">
-                    <h3 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 0.5rem;">No matches found</h3>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Try adjusting your search terms or relaxing your filters.</p>
+            let emptyHtml = `
+                <div class="job-card" style="text-align: center; padding: 4rem 2rem; border-style: dashed; cursor: default; width: 100%; box-sizing: border-box;">
+                    <h3 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 0.5rem;">No jobs found</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">We couldn't find any jobs matching your current filters.</p>
+                    <button class="btn-secondary" onclick="clearAllFilters()" style="padding: 0.5rem 1rem; border-radius: 6px;">Clear all filters</button>
                 </div>
             `;
+
+            const showSavedOnly = savedJobsFilter ? savedJobsFilter.checked : false;
+            if (showSavedOnly && savedJobs.length === 0) {
+                emptyHtml = `
+                    <div class="job-card" style="text-align: center; padding: 4rem 2rem; border-style: dashed; cursor: default; width: 100%; box-sizing: border-box;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--text-muted);">🔖</div>
+                        <h3 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 0.5rem;">No saved jobs yet</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.4;">Save jobs you're interested in and<br>they'll appear here.</p>
+                        <button class="btn-primary" onclick="removeFilter('saved', '')" style="padding: 0.5rem 1.5rem; border-radius: 6px;">Browse Jobs</button>
+                    </div>
+                `;
+            } else if (showSavedOnly && savedJobs.length > 0) {
+                emptyHtml = `
+                    <div class="job-card" style="text-align: center; padding: 4rem 2rem; border-style: dashed; cursor: default; width: 100%; box-sizing: border-box;">
+                        <h3 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 0.5rem;">No saved jobs match your current filters.</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Try adjusting your search terms or relaxing your filters.</p>
+                        <button class="btn-secondary" onclick="clearAllFilters()" style="padding: 0.5rem 1rem; border-radius: 6px;">Clear all filters</button>
+                    </div>
+                `;
+            }
+
+            jobsContainer.innerHTML = emptyHtml;
             if (paginationControls) paginationControls.style.display = 'none';
             return;
         }
