@@ -24,6 +24,16 @@ class Settings(BaseSettings):
 
     # --- Database ---
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/jobingestion"
+    
+    @field_validator("DATABASE_URL", mode="before")
+    def assemble_db_connection(cls, v: str | None) -> str:
+        """Ensure Render/Heroku standard postgres:// URLs are converted to use the async driver"""
+        if isinstance(v, str):
+            if v.startswith("postgres://"):
+                return v.replace("postgres://", "postgresql+asyncpg://", 1)
+            elif v.startswith("postgresql://") and not v.startswith("postgresql+asyncpg://"):
+                return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return v or "sqlite+aiosqlite:///./jobingestion.db"
     DB_POOL_SIZE: int = 5
     DB_MAX_OVERFLOW: int = 10
     DB_ECHO: bool = False
