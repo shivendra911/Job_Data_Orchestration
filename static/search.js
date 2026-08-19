@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('next-page');
     const pageInfo = document.getElementById('page-info');
 
+    const savedJobsFilter = document.getElementById('saved-jobs-filter');
+    
     // Formatting utilities
     const formatCurrency = (num) => {
         if (num === 0) return 'Any';
@@ -52,6 +54,39 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'Posted today';
     };
 
+    // Saved Jobs Logic
+    let savedJobs = [];
+    try {
+        savedJobs = JSON.parse(localStorage.getItem('savedJobs')) || [];
+    } catch (e) {
+        console.error('Error loading saved jobs', e);
+    }
+    
+    window.toggleSaveJob = (e, jobId) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (savedJobs.includes(jobId)) {
+            savedJobs = savedJobs.filter(id => id !== jobId);
+        } else {
+            savedJobs.push(jobId);
+        }
+        localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
+        
+        // Update the button icon visually
+        const btn = document.querySelector(`.save-btn[data-job-id="${jobId}"]`);
+        if (btn) {
+            btn.innerHTML = savedJobs.includes(jobId) 
+                ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" style="color: var(--text-main);"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>'
+                : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>';
+        }
+        
+        // Re-filter if we are currently looking at saved jobs
+        if (savedJobsFilter && savedJobsFilter.checked) {
+            applyFilters();
+        }
+    };
+
     // Initial Fetch
     fetchJobs();
 
@@ -65,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         locationInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyFilters(); });
     }
     if (searchBtn) searchBtn.addEventListener('click', applyFilters);
+    if (savedJobsFilter) savedJobsFilter.addEventListener('change', applyFilters);
     
     jobTypeFilters.forEach(cb => cb.addEventListener('change', applyFilters));
     workModelFilters.forEach(cb => cb.addEventListener('change', applyFilters));
@@ -85,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (searchInput) searchInput.value = '';
             if (locationInput) locationInput.value = '';
             
+            if (savedJobsFilter) savedJobsFilter.checked = false;
             jobTypeFilters.forEach(cb => cb.checked = false);
             workModelFilters.forEach(cb => cb.checked = false);
             
@@ -140,10 +177,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const minSalary = salarySlider ? (parseInt(salarySlider.value) || 0) : 0;
         const sortOrder = sortSelect ? sortSelect.value : 'newest';
         
+        const showSavedOnly = savedJobsFilter ? savedJobsFilter.checked : false;
         const selectedJobTypes = jobTypeFilters.filter(cb => cb.checked).map(cb => cb.value);
         const selectedWorkModels = workModelFilters.filter(cb => cb.checked).map(cb => cb.value);
 
         filteredJobs = allJobs.filter(job => {
+            if (showSavedOnly && !savedJobs.includes(job.id)) {
+                return false;
+            }
+
             let matchesQuery = true;
             if (query) {
                 const titleMatch = job.title.toLowerCase().includes(query);
@@ -275,6 +317,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Initials for company logo
             const companyName = job.company || 'Unknown';
             const initials = companyName.substring(0, 1).toUpperCase();
+            
+            const isSaved = savedJobs.includes(job.id);
+            const savedIcon = isSaved 
+                ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" style="color: var(--text-main);"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>'
+                : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>';
 
             card.innerHTML = `
                 <div class="job-header">
@@ -285,7 +332,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="job-company">${companyName}</div>
                         </div>
                     </div>
-                    <div>
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <button class="save-btn" data-job-id="${job.id}" onclick="toggleSaveJob(event, '${job.id}')" style="background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 0.25rem;">
+                            ${savedIcon}
+                        </button>
                         <a href="${job.url}" target="_blank" onclick="event.stopPropagation()" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.85rem; border-radius: 6px;">Apply Now</a>
                     </div>
                 </div>
