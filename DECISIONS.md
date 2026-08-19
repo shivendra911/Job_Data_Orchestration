@@ -1,32 +1,25 @@
-# Architecture & Technical Decisions
+# DECISIONS.md
 
-This document serves as the primary artifact for explaining and defending the engineering decisions made in the Job Ingestion Platform.
+## 1. Why this ingestion strategy over the obvious alternative I rejected?
 
-## 1. Why FastAPI?
-- Native asynchronous support (`async`/`await`), crucial for high-throughput I/O bound tasks like fetching data from multiple remote APIs.
-- Built-in data validation and serialization via Pydantic.
-- Excellent developer experience and automatic OpenAPI documentation.
+I rejected building a monolithic Playwright scraper that tries to impersonate a human on LinkedIn/Indeed. Instead, I built a source-agnostic ingestion platform with the Adapter pattern:
 
-## 2. Why PostgreSQL + asyncpg (and Neon)?
-- **PostgreSQL**: Industry standard, robust, supports JSONB for unstructured payload storage, and handles large analytical queries well.
-- **asyncpg**: The fastest async PostgreSQL driver for Python.
-- **Neon Serverless**: The platform detects if it's running on Neon (via `DATABASE_URL`) and swaps the connection pooler to `NullPool`. Neon manages pooling at the proxy layer (pgbouncer), so client-side pooling causes connection exhaustion and transaction state errors.
+- **Rejected**: Single-source Playwright scraper with proxy rotation. Fragile, ethically questionable, expensive to maintain, gets banned.
+- **Chosen**: Multi-source adapter architecture with cheapest-mechanism-first. 
+  - httpx for APIs, BS4 for HTML, Playwright only when truly needed.
+  - Each source is isolated: one breaking doesn't affect others.
+  - Circuit breakers and retry policies handle failures automatically.
 
-## 3. Why `expire_on_commit=False`?
-In SQLAlchemy's async extension, lazy loading relationships after a transaction commits is prohibited (because it would require implicit blocking I/O). Setting this prevents `DetachedInstanceError` when accessing model attributes after returning from the repository layer. We use `selectinload` for eager loading where necessary.
+The architecture proves the engineering patterns against real, permitted APIs (Arbeitnow, Remotive, Hacker News) and demonstrates failure resilience.
 
-## 4. Resilience Architecture
-- **tenacity**: Implements exponential backoff with jitter for transient errors (e.g., rate limits, temporary network blips). Jitter prevents the "thundering herd" problem when systems recover.
-- **pybreaker**: Circuit breakers prevent cascading failures. If a source goes down completely, the circuit opens, failing fast without waiting for timeouts on every request. This protects our system's thread pool and respects the remote server's downtime.
+## 2. One trade-off I made under the time limit, and what I'd do with a real week
 
-## 5. Batch Validation
-Data ingestion pipelines often fail silently when the source API changes its schema. The `BatchValidator` computes the invalidity ratio of a batch. If >30% of jobs fail to parse, the entire batch is rejected. This prevents polluting the database with partial or broken data during an upstream schema change.
+**Trade-off**: No Playwright adapter in the live demo. All three live sources (Arbeitnow, Remotive, HN) provide JSON APIs, so Playwright is unnecessary. We also migrated the deployment local testing environment to SQLite for rapid Windows iterations, sacrificing PostgreSQL-native optimizations like `JSONB`.
 
-## 6. Deduplication Strategy
-Jobs don't always have stable IDs across platforms. The platform uses a deterministic SHA-256 fingerprint:
-- `source_name + source_job_id` (if available)
-- `source_name + title + company + location` (if no stable ID exists)
-This allows idempotency without complex text similarity algorithms.
+**With a real week**: I'd add a Playwright adapter for a source that genuinely requires browser rendering (e.g., a JavaScript-rendered job board), implement `playwright-stealth` for anti-detection, add WebSocket-based live dashboard updates instead of polling, and utilize a dedicated PostgreSQL environment for all phases of testing and production.
 
-## 7. Canonical Log Lines
-Instead of logging 50 lines per ingestion run, we use `structlog` to emit a single, JSON-formatted "canonical log line" at the end of the run containing all metadata (duration, jobs fetched, valid, duplicates). This makes querying in Datadog/Splunk extremely efficient.
+## 3. Where did I use AI tools, and what did I personally verify or change?
+
+- **Architecture design**: AI proposed the adapter pattern and circuit breaker concept. I verified these against Martin Fowler's circuit breaker pattern and the Gang of Four Strategy pattern. Modified the state machine to include a DEGRADED state between HEALTHY and DISABLED.
+- **Code generation**: AI generated boilerplate for FastAPI endpoints, Pydantic models, and Dockerfile. I personally wrote the ingestion orchestrator, the batch validation logic, the async state-sync implementation for `pybreaker`, and the sandbox chaos server.
+- **Testing**: AI suggested test cases. I expanded them to cover edge cases I identified during manual testing (e.g., Unicode in job titles, empty salary ranges, malformed URLs).

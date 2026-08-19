@@ -35,3 +35,9 @@ Thumbs.db
 
 # Docker
 *.log
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+jobingestion.db

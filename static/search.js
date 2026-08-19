@@ -163,60 +163,60 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'job-card';
             // Limit animation delay so the page doesn't take too long to render if they flip pages fast
-            card.style.animationDelay = \`\${Math.min(index * 0.05, 0.4)}s\`;
+            card.style.animationDelay = `${Math.min(index * 0.05, 0.4)}s`;
 
             // Formatting
             let salaryStr = '';
             if (job.salary_min || job.salary_max) {
                 const cur = job.salary_currency || '$';
                 if (job.salary_min && job.salary_max && job.salary_min !== job.salary_max) {
-                    salaryStr = \`<div class="job-meta-item"><svg class="job-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> \${cur}\${formatK(job.salary_min)} - \${formatK(job.salary_max)}</div>\`;
+                    salaryStr = `<div class="job-meta-item"><svg class="job-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> ${cur}${formatK(job.salary_min)} - ${formatK(job.salary_max)}</div>`;
                 } else {
                     const val = job.salary_max || job.salary_min;
-                    salaryStr = \`<div class="job-meta-item"><svg class="job-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> \${cur}\${formatK(val)}</div>\`;
+                    salaryStr = `<div class="job-meta-item"><svg class="job-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> ${cur}${formatK(val)}</div>`;
                 }
             }
 
-            const locationStr = job.location ? \`<div class="job-meta-item"><svg class="job-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> \${job.location}</div>\` : '';
-            const remoteStr = job.remote ? \`<div class="job-meta-item"><svg class="job-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg> Remote</div>\` : '';
+            const locationStr = job.location ? `<div class="job-meta-item"><svg class="job-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> ${job.location}</div>` : '';
+            const remoteStr = job.remote ? `<div class="job-meta-item"><svg class="job-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg> Remote</div>` : '';
             
             const postedDate = job.posted_at ? new Date(job.posted_at).toLocaleDateString(undefined, {month: 'short', day: 'numeric'}) : '';
-            const dateStr = postedDate ? \`<div class="job-meta-item"><svg class="job-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> \${postedDate}</div>\` : '';
+            const dateStr = postedDate ? `<div class="job-meta-item"><svg class="job-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ${postedDate}</div>` : '';
 
             let tagsHtml = '';
             if (job.tags && job.tags.length > 0) {
-                tagsHtml = job.tags.slice(0, 5).map(t => \`<span class="tag">\${t}</span>\`).join('');
+                tagsHtml = job.tags.slice(0, 5).map(t => `<span class="tag">${t}</span>`).join('');
             }
             
-            let sourceTag = \`<span class="tag tag-source">\${job.source_name || job.source_id.split('-')[0]}</span>\`;
+            let sourceTag = `<span class="tag tag-source">${job.source_name || job.source_id.split('-')[0]}</span>`;
 
-            card.innerHTML = \`
+            card.innerHTML = `
                 <div class="job-header">
                     <div>
-                        <a href="\${job.url}" target="_blank" class="job-title">\${job.title}</a>
-                        <div class="job-company">\${job.company}</div>
+                        <a href="${job.url}" target="_blank" class="job-title">${job.title}</a>
+                        <div class="job-company">${job.company}</div>
                     </div>
                     <div>
-                        <a href="\${job.url}" target="_blank" class="btn-primary" style="padding: 0.4rem 1rem; font-size: 0.9rem; border-radius: 6px;">Apply Now</a>
+                        <a href="${job.url}" target="_blank" class="btn-primary" style="padding: 0.4rem 1rem; font-size: 0.9rem; border-radius: 6px;">Apply Now</a>
                     </div>
                 </div>
                 <div class="job-meta">
-                    \${locationStr}
-                    \${remoteStr}
-                    \${salaryStr}
-                    \${dateStr}
+                    ${locationStr}
+                    ${remoteStr}
+                    ${salaryStr}
+                    ${dateStr}
                 </div>
                 <div class="job-tags" style="margin-top: 0.75rem;">
-                    \${sourceTag}
-                    \${tagsHtml}
+                    ${sourceTag}
+                    ${tagsHtml}
                 </div>
-            \`;
+            `;
             jobsContainer.appendChild(card);
         });
 
         if (totalPages > 1) {
             paginationControls.style.display = 'flex';
-            pageInfo.textContent = \`Page \${currentPage} of \${totalPages}\`;
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
             prevBtn.disabled = currentPage === 1;
             nextBtn.disabled = currentPage === totalPages;
         } else {
