@@ -117,3 +117,4 @@ class Job(Base):
 
     # Relationships
     source: Mapped["Source"] = relationship(back_populates="jobs")
+    saved_by_users = relationship("SavedJob", back_populates="job", cascade="all, delete-orphan")
