@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.style.borderBottom = '1px solid var(--border-subtle)';
             
             const time = new Date(log.started_at).toLocaleTimeString();
-            let statusColor = log.status === 'completed' ? 'var(--status-success)' : 'var(--status-error)';
+            let statusColor = log.status === 'success' ? 'var(--status-success)' : 'var(--status-error)';
             
             div.innerHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${job.remote ? '<span class="tag" style="margin-left: 8px;">Remote</span>' : ''}
                 </td>
                 <td>${job.company}</td>
-                <td><span class="tag">${job.source_id.split('-')[0]}</span></td>
+                <td><span class="tag">${job.source_name || job.source_id.split('-')[0]}</span></td>
                 <td>${salaryStr}</td>
                 <td>${posted}</td>
             `;

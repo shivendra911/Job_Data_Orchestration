@@ -16,7 +16,7 @@ from app.models.domain import JobResponse
 router = APIRouter()
 
 
-@router.get("/", response_model=list[JobResponse])
+@router.get("/")
 async def list_jobs(
     db: AsyncSession = Depends(get_db),
     skip: int = Query(0, ge=0),
@@ -25,7 +25,7 @@ async def list_jobs(
     remote_only: bool = False,
 ):
     """List and filter active job postings."""
-    stmt = select(Job).where(Job.is_active == True)
+    stmt = select(Job).options(selectinload(Job.source)).where(Job.is_active == True)
     
     if source_id:
         stmt = stmt.where(Job.source_id == source_id)
@@ -35,7 +35,15 @@ async def list_jobs(
     stmt = stmt.order_by(Job.posted_at.desc().nulls_last()).offset(skip).limit(limit)
     
     result = await db.execute(stmt)
-    return result.scalars().all()
+    jobs = result.scalars().all()
+    
+    # Attach source_name for the response
+    response = []
+    for job in jobs:
+        job_dict = JobResponse.model_validate(job).model_dump()
+        job_dict["source_name"] = job.source.name if job.source else "unknown"
+        response.append(job_dict)
+    return response
 
 
 import csv

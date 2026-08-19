@@ -2,6 +2,7 @@
 Deduplication logic and fingerprinting for jobs.
 """
 import hashlib
+import re
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,7 +11,6 @@ from app.models.database import Job
 from app.models.domain import JobCreate
 
 
-import re
 
 def _normalize_string(s: str | None) -> str:
     if not s:
