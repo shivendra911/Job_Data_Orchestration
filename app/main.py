@@ -3,7 +3,7 @@ FastAPI application factory.
 """
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import make_asgi_app
 import structlog
@@ -84,31 +84,32 @@ def create_app() -> FastAPI:
     metrics_app = make_asgi_app()
     app.mount("/metrics", metrics_app)
     
-    # --- Static Files ---
+    # --- Static Files and Templates ---
     from fastapi.staticfiles import StaticFiles
-    from fastapi.responses import FileResponse
+    from fastapi.templating import Jinja2Templates
     
     app.mount("/static", StaticFiles(directory="static"), name="static")
+    templates = Jinja2Templates(directory="app/templates")
     
     @app.get("/", include_in_schema=False)
-    async def root():
-        return FileResponse("static/landing.html")
+    async def root(request: Request):
+        return templates.TemplateResponse("landing.html", {"request": request, "active_page": "home"})
 
     @app.get("/search", include_in_schema=False)
-    async def search():
-        return FileResponse("static/search.html")
+    async def search(request: Request):
+        return templates.TemplateResponse("search.html", {"request": request, "active_page": "search"})
 
     @app.get("/system", include_in_schema=False)
-    async def system():
-        return FileResponse("static/system.html")
+    async def system(request: Request):
+        return templates.TemplateResponse("system.html", {"request": request, "active_page": "system"})
 
     @app.get("/docs", include_in_schema=False)
-    async def docs():
-        return FileResponse("static/docs.html")
+    async def docs(request: Request):
+        return templates.TemplateResponse("docs.html", {"request": request, "active_page": "docs"})
 
     @app.get("/app", include_in_schema=False)
-    async def app_dashboard():
-        return FileResponse("static/index.html")
+    async def app_dashboard(request: Request):
+        return templates.TemplateResponse("dashboard.html", {"request": request, "active_page": "dashboard"})
         
     return app
 

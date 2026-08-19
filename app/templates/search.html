@@ -1,17 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Jobs - Ingestion Pipeline</title>
-    <link rel="stylesheet" href="/static/site.css">
-    <script>
+{% extends 'base.html' %}
+
+{% block title %}Find Jobs - Ingestion Pipeline{% endblock %}
+
+{% block head %}
+<link href="/static/site.css" rel="stylesheet"/>
+<script>
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'brutalist') {
             document.documentElement.setAttribute('data-theme', 'brutalist');
         }
     </script>
-    <style>
+<style>
         body {
             min-height: 100vh;
             display: flex;
@@ -519,151 +518,124 @@
             }
         }
     </style>
-</head>
-<body>
-    <nav class="site-nav">
-        <a href="/" class="site-nav-logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-            IngestPipe
-        </a>
-        <div class="site-nav-links">
-            <a href="/search" class="active">Find Jobs</a>
-            <a href="/system">System</a>
-            <a href="/docs">Documentation</a>
-            <a href="/app" class="btn-primary">Dashboard</a>
-        </div>
-    </nav>
+{% endblock %}
 
-    <!-- Hero Search Area -->
-    <div class="hero-search-container">
-        <div class="container">
-            <h1 class="hero-title">Find Your Next Role</h1>
-            <div class="hero-search-wrapper">
-                <div class="hero-search-input-group">
-                    <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="text" id="hero-search-input" class="hero-search-input" placeholder="Job title, company, or keywords..." autocomplete="off">
-                </div>
-                <div class="hero-location-input-group">
-                    <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    <input type="text" id="hero-location-input" class="hero-location-input" placeholder="Location" autocomplete="off">
-                </div>
-                <button id="hero-search-btn" class="btn-primary hero-search-btn">Search</button>
-            </div>
-        </div>
-    </div>
-
-    <main class="container">
-        <div class="search-layout">
-            <!-- Sidebar Filters -->
-            <aside class="filter-sidebar">
-                <div class="filter-header">
-                    <h3>Filters</h3>
-                    <a href="#" id="reset-filters" style="font-size: 0.8rem; color: var(--text-muted); text-decoration: underline;">Reset All</a>
-                </div>
-
-                <div class="filter-group" style="background-color: var(--bg-panel); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
-                    <label class="toggle-switch-wrapper" style="margin: 0;">
-                        <span style="font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" style="color: var(--text-main);"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+{% block content %}
+ Hero Search Area <div class="hero-search-container">
+<div class="container">
+<h1 class="hero-title">Find Your Next Role</h1>
+<div class="hero-search-wrapper">
+<div class="hero-search-input-group">
+<svg class="hero-search-icon" fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+<input autocomplete="off" class="hero-search-input" id="hero-search-input" placeholder="Job title, company, or keywords..." type="text"/>
+</div>
+<div class="hero-location-input-group">
+<svg class="hero-search-icon" fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+<input autocomplete="off" class="hero-location-input" id="hero-location-input" placeholder="Location" type="text"/>
+</div>
+<button class="btn-primary hero-search-btn" id="hero-search-btn">Search</button>
+</div>
+</div>
+</div><main class="container">
+<div class="search-layout">
+<!-- Sidebar Filters -->
+<aside class="filter-sidebar">
+<div class="filter-header">
+<h3>Filters</h3>
+<a href="#" id="reset-filters" style="font-size: 0.8rem; color: var(--text-muted); text-decoration: underline;">Reset All</a>
+</div>
+<div class="filter-group" style="background-color: var(--bg-panel); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
+<label class="toggle-switch-wrapper" style="margin: 0;">
+<span style="font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+<svg fill="currentColor" height="14" stroke="currentColor" stroke-width="2" style="color: var(--text-main);" viewbox="0 0 24 24" width="14"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                             Saved Jobs Only
                         </span>
-                        <div class="toggle-switch">
-                            <input type="checkbox" id="saved-jobs-filter">
-                            <span class="toggle-slider"></span>
-                        </div>
-                    </label>
-                </div>
-
-                <div class="filter-group">
-                    <button class="filter-header-toggle">
-                        <span style="display: flex; align-items: center; gap: 0.5rem;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+<div class="toggle-switch">
+<input id="saved-jobs-filter" type="checkbox"/>
+<span class="toggle-slider"></span>
+</div>
+</label>
+</div>
+<div class="filter-group">
+<button class="filter-header-toggle">
+<span style="display: flex; align-items: center; gap: 0.5rem;">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><rect height="14" rx="2" ry="2" width="20" x="2" y="7"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                             Job Type
                         </span>
-                        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-                    <div class="checkbox-group filter-content">
-                        <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="full-time"> Full-time</label>
-                        <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="part-time"> Part-time</label>
-                        <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="internship"> Internship</label>
-                        <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="contract"> Contract</label>
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <button class="filter-header-toggle">
-                        <span style="display: flex; align-items: center; gap: 0.5rem;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+<svg class="chevron" fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</button>
+<div class="checkbox-group filter-content">
+<label class="checkbox-label"><input class="job-type-filter" type="checkbox" value="full-time"/> Full-time</label>
+<label class="checkbox-label"><input class="job-type-filter" type="checkbox" value="part-time"/> Part-time</label>
+<label class="checkbox-label"><input class="job-type-filter" type="checkbox" value="internship"/> Internship</label>
+<label class="checkbox-label"><input class="job-type-filter" type="checkbox" value="contract"/> Contract</label>
+</div>
+</div>
+<div class="filter-group">
+<button class="filter-header-toggle">
+<span style="display: flex; align-items: center; gap: 0.5rem;">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                             Work Model
                         </span>
-                        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-                    <div class="checkbox-group filter-content">
-                        <label class="checkbox-label"><input type="checkbox" class="work-model-filter" value="remote"> Remote</label>
-                        <label class="checkbox-label"><input type="checkbox" class="work-model-filter" value="hybrid"> Hybrid</label>
-                        <label class="checkbox-label"><input type="checkbox" class="work-model-filter" value="on-site"> On-site</label>
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <button class="filter-header-toggle">
-                        <span style="display: flex; align-items: center; gap: 0.5rem;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+<svg class="chevron" fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</button>
+<div class="checkbox-group filter-content">
+<label class="checkbox-label"><input class="work-model-filter" type="checkbox" value="remote"/> Remote</label>
+<label class="checkbox-label"><input class="work-model-filter" type="checkbox" value="hybrid"/> Hybrid</label>
+<label class="checkbox-label"><input class="work-model-filter" type="checkbox" value="on-site"/> On-site</label>
+</div>
+</div>
+<div class="filter-group">
+<button class="filter-header-toggle">
+<span style="display: flex; align-items: center; gap: 0.5rem;">
+<svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="12" x2="12" y1="1" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                             Minimum Salary
                         </span>
-                        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-                    <div class="range-slider-wrapper filter-content">
-                        <input type="range" id="salary-slider" class="range-slider" min="0" max="250000" step="5000" value="0">
-                        <div class="range-value-display">
-                            <span>Any</span>
-                            <span id="salary-display">Any</span>
-                        </div>
-                    </div>
-                </div>
-            </aside>
+<svg class="chevron" fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</button>
+<div class="range-slider-wrapper filter-content">
+<input class="range-slider" id="salary-slider" max="250000" min="0" step="5000" type="range" value="0"/>
+<div class="range-value-display">
+<span>Any</span>
+<span id="salary-display">Any</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Results Area -->
+<section class="results-area" style="width: 100%; min-width: 0;">
+<div class="search-stats" id="search-stats-container" style="display: none;">
+<span id="search-stats-text" style="font-weight: 500; color: var(--text-main);">Showing 0 jobs</span>
+<div style="display: flex; align-items: center; gap: 0.5rem;">
+<label for="sort-select" style="font-size: 0.85rem;">Sort by:</label>
+<select class="sort-select" id="sort-select">
+<option value="newest">Newest First</option>
+<option value="oldest">Oldest First</option>
+<option value="salary_high">Highest Salary</option>
+</select>
+</div>
+</div>
+<div class="active-filters-container" id="active-filters-container"></div>
+<div id="loading-indicator">
+<div class="spinner"></div>
+<div>Fetching latest data from pipeline...</div>
+</div>
+<div id="jobs-container" style="width: 100%; display: flex; flex-direction: column; align-items: stretch;">
+<!-- Job cards rendered here by JS -->
+</div>
+<div class="pagination-controls" id="pagination-controls" style="display: none;">
+<button class="btn-secondary" disabled="" id="prev-page">← Prev</button>
+<span id="page-info" style="font-family: var(--font-mono); font-size: 0.85rem;">Page 1</span>
+<button class="btn-secondary" id="next-page">Next →</button>
+</div>
+</section>
+</div>
+</main>
+{% endblock %}
 
-            <!-- Results Area -->
-            <section class="results-area" style="width: 100%; min-width: 0;">
-                <div class="search-stats" id="search-stats-container" style="display: none;">
-                    <span id="search-stats-text" style="font-weight: 500; color: var(--text-main);">Showing 0 jobs</span>
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <label for="sort-select" style="font-size: 0.85rem;">Sort by:</label>
-                        <select id="sort-select" class="sort-select">
-                            <option value="newest">Newest First</option>
-                            <option value="oldest">Oldest First</option>
-                            <option value="salary_high">Highest Salary</option>
-                        </select>
-                    </div>
-                </div>
+{% block scripts %}
+<script src="/static/search.js"></script>
+{% endblock %}
 
-
-                <div id="active-filters-container" class="active-filters-container"></div>
-                
-                <div id="loading-indicator">
-                    <div class="spinner"></div>
-                    <div>Fetching latest data from pipeline...</div>
-                </div>
-
-                <div id="jobs-container" style="width: 100%; display: flex; flex-direction: column; align-items: stretch;">
-                    <!-- Job cards rendered here by JS -->
-                </div>
-
-                <div class="pagination-controls" id="pagination-controls" style="display: none;">
-                    <button id="prev-page" class="btn-secondary" disabled>&larr; Prev</button>
-                    <span id="page-info" style="font-family: var(--font-mono); font-size: 0.85rem;">Page 1</span>
-                    <button id="next-page" class="btn-secondary">Next &rarr;</button>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 Ingestion Pipeline Systems.</p>
-        </div>
-    </footer>
-
-    <script src="/static/search.js"></script>
-</body>
-</html>
+{% block footer %}
+{% endblock %}
