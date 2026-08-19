@@ -93,23 +93,23 @@ def create_app() -> FastAPI:
     
     @app.get("/", include_in_schema=False)
     async def root(request: Request):
-        return templates.TemplateResponse("landing.html", {"request": request, "active_page": "home"})
+        return templates.TemplateResponse(request=request, name="landing.html", context={"request": request, "active_page": "home"})
 
     @app.get("/search", include_in_schema=False)
     async def search(request: Request):
-        return templates.TemplateResponse("search.html", {"request": request, "active_page": "search"})
+        return templates.TemplateResponse(request=request, name="search.html", context={"request": request, "active_page": "search"})
 
     @app.get("/system", include_in_schema=False)
     async def system(request: Request):
-        return templates.TemplateResponse("system.html", {"request": request, "active_page": "system"})
+        return templates.TemplateResponse(request=request, name="system.html", context={"request": request, "active_page": "system"})
 
     @app.get("/docs", include_in_schema=False)
     async def docs(request: Request):
-        return templates.TemplateResponse("docs.html", {"request": request, "active_page": "docs"})
+        return templates.TemplateResponse(request=request, name="docs.html", context={"request": request, "active_page": "docs"})
 
     @app.get("/app", include_in_schema=False)
     async def app_dashboard(request: Request):
-        return templates.TemplateResponse("dashboard.html", {"request": request, "active_page": "dashboard"})
+        return templates.TemplateResponse(request=request, name="dashboard.html", context={"request": request, "active_page": "dashboard"})
         
     return app
 
