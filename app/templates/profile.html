@@ -29,6 +29,38 @@
             <label for="salary" style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Target Minimum Salary (USD)</label>
             <input type="number" id="salary" placeholder="e.g. 100000" style="width: 100%; padding: 0.75rem; background: var(--bg-main); border: 1px solid var(--border-subtle); color: var(--text-main); border-radius: 4px; box-sizing: border-box;">
         </div>
+
+        <h3 style="margin-bottom: 1rem; font-size: 1.1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem; margin-top: 2rem;">Advanced Matching (New)</h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div>
+                <label for="education" style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Highest Education</label>
+                <select id="education" style="width: 100%; padding: 0.75rem; background: var(--bg-main); border: 1px solid var(--border-subtle); color: var(--text-main); border-radius: 4px; box-sizing: border-box;">
+                    <option value="">Any</option>
+                    <option value="none">High School / None</option>
+                    <option value="bachelors">Bachelor's Degree</option>
+                    <option value="masters">Master's Degree</option>
+                    <option value="phd">Ph.D. / Doctorate</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="experience" style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Experience Level</label>
+                <select id="experience" style="width: 100%; padding: 0.75rem; background: var(--bg-main); border: 1px solid var(--border-subtle); color: var(--text-main); border-radius: 4px; box-sizing: border-box;">
+                    <option value="">Any</option>
+                    <option value="entry">Entry Level / Junior</option>
+                    <option value="mid">Mid Level</option>
+                    <option value="senior">Senior</option>
+                    <option value="lead">Lead / Manager</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <label for="skills" style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Core Skills (comma separated)</label>
+            <input type="text" id="skills" placeholder="e.g. Python, React, SQL, AWS" style="width: 100%; padding: 0.75rem; background: var(--bg-main); border: 1px solid var(--border-subtle); color: var(--text-main); border-radius: 4px; box-sizing: border-box;">
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Used to strictly prioritize jobs matching your exact stack.</p>
+        </div>
         
         <div id="profile-msg" style="font-size: 0.85rem; margin-bottom: 1rem; display: none;"></div>
         
@@ -59,6 +91,9 @@
             document.getElementById('roles').value = (data.preferred_roles || []).join(', ');
             document.getElementById('locations').value = (data.preferred_locations || []).join(', ');
             document.getElementById('salary').value = data.target_salary || '';
+            document.getElementById('education').value = data.education_level || '';
+            document.getElementById('experience').value = data.experience_level || '';
+            document.getElementById('skills').value = (data.skills || []).join(', ');
         } catch (err) {
             console.error(err);
         }
@@ -73,6 +108,10 @@
         const locations = document.getElementById('locations').value.split(',').map(s => s.trim()).filter(s => s);
         const salary = parseInt(document.getElementById('salary').value) || null;
         
+        const education = document.getElementById('education').value || null;
+        const experience = document.getElementById('experience').value || null;
+        const skills = document.getElementById('skills').value.split(',').map(s => s.trim()).filter(s => s);
+        
         try {
             const res = await fetch('/api/v1/users/me/preferences', {
                 method: 'PUT',
@@ -83,7 +122,10 @@
                 body: JSON.stringify({
                     preferred_roles: roles,
                     preferred_locations: locations,
-                    target_salary: salary
+                    target_salary: salary,
+                    education_level: education,
+                    experience_level: experience,
+                    skills: skills
                 })
             });
             

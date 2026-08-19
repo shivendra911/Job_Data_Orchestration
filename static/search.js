@@ -197,12 +197,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Error fetching saved jobs", err);
             }
             
-            // Fetch recommended jobs in background
-            fetch('/api/v1/jobs/recommended', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            }).then(r => r.json()).then(data => {
-                recommendedJobs = data;
-            }).catch(e => console.error("Error fetching recommended jobs", e));
+            // Fetch recommended jobs
+            try {
+                const recRes = await fetch('/api/v1/jobs/recommended', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (recRes.ok) {
+                    recommendedJobs = await recRes.json();
+                    // By default, turn on For You for authenticated users
+                    if (forYouFilter) {
+                        forYouFilter.checked = true;
+                    }
+                }
+            } catch (e) {
+                console.error("Error fetching recommended jobs", e);
+            }
         }
 
         try {

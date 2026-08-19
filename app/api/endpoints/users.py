@@ -15,12 +15,18 @@ class UserPreferencesUpdate(BaseModel):
     preferred_roles: Optional[List[str]] = None
     preferred_locations: Optional[List[str]] = None
     target_salary: Optional[int] = None
+    education_level: Optional[str] = None
+    experience_level: Optional[str] = None
+    skills: Optional[List[str]] = None
 
 class UserProfileResponse(BaseModel):
     email: str
     preferred_roles: List[str]
     preferred_locations: List[str]
     target_salary: Optional[int]
+    education_level: Optional[str]
+    experience_level: Optional[str]
+    skills: List[str]
 
 @router.get("/me", response_model=UserProfileResponse)
 async def read_user_me(current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
@@ -32,7 +38,10 @@ async def read_user_me(current_user: User = Depends(get_current_user), db: Async
         "email": current_user.email,
         "preferred_roles": profile.preferred_roles or [],
         "preferred_locations": profile.preferred_locations or [],
-        "target_salary": profile.target_salary
+        "target_salary": profile.target_salary,
+        "education_level": profile.education_level,
+        "experience_level": profile.experience_level,
+        "skills": profile.skills or []
     }
 
 @router.put("/me/preferences")
@@ -55,6 +64,12 @@ async def update_user_preferences(
         profile.preferred_locations = prefs.preferred_locations
     if prefs.target_salary is not None:
         profile.target_salary = prefs.target_salary
+    if prefs.education_level is not None:
+        profile.education_level = prefs.education_level
+    if prefs.experience_level is not None:
+        profile.experience_level = prefs.experience_level
+    if prefs.skills is not None:
+        profile.skills = prefs.skills
         
     await db.commit()
     return {"status": "success"}

@@ -33,6 +33,11 @@ class UserProfile(Base):
     preferred_locations: Mapped[Optional[List[str]]] = mapped_column(JSON, default=list)
     target_salary: Mapped[Optional[int]] = mapped_column(nullable=True)
     
+    # Advanced Personalization Fields
+    education_level: Mapped[Optional[str]] = mapped_column(String(50), nullable=True) # e.g., 'none', 'bachelors', 'masters', 'phd'
+    experience_level: Mapped[Optional[str]] = mapped_column(String(50), nullable=True) # e.g., 'entry', 'mid', 'senior', 'lead'
+    skills: Mapped[Optional[List[str]]] = mapped_column(JSON, default=list)
+    
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="profile")
 

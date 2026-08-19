@@ -1,7 +1,7 @@
 """
 Job endpoints.
 """
-from typing import Annotated
+from typing import Annotated, List
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -50,50 +50,90 @@ from app.api.deps import get_current_user
 from app.models.user import User, UserProfile
 from sqlalchemy import or_
 
-@router.get("/recommended")
-async def recommended_jobs(
+@router.get("/recommended", response_model=List[JobResponse])
+async def get_recommended_jobs(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
-    skip: int = Query(0, ge=0),
-    limit: int = Query(20, ge=1, le=100)
+    db: AsyncSession = Depends(get_db)
 ):
-    """Get personalized job recommendations based on user profile preferences."""
-    # Fetch user profile
+    """
+    Get personalized job recommendations based on the user's profile.
+    Uses intelligent text-matching heuristics to filter by education, experience, and skills.
+    """
     stmt = select(UserProfile).where(UserProfile.user_id == current_user.id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
     
-    # Base query
-    stmt = select(Job).options(selectinload(Job.source)).where(Job.is_active == True)
+    if not profile:
+        return []
+        
+    query = select(Job).options(selectinload(Job.source)).where(Job.is_active == True)
     
-    if profile:
-        conditions = []
-        if profile.preferred_roles:
-            role_conditions = [Job.title.ilike(f"%{role}%") for role in profile.preferred_roles]
-            conditions.append(or_(*role_conditions))
-            
-        if profile.preferred_locations:
-            loc_conditions = [Job.location.ilike(f"%{loc}%") for loc in profile.preferred_locations]
-            conditions.append(or_(*loc_conditions))
-            
-        if profile.target_salary:
-            conditions.append(Job.salary_min >= profile.target_salary)
-            
-        if conditions:
-            # For recommendations, we match ANY of the conditions (OR)
-            stmt = stmt.where(or_(*conditions))
-            
-    stmt = stmt.order_by(Job.posted_at.desc().nulls_last()).offset(skip).limit(limit)
-    
-    result = await db.execute(stmt)
+    if profile.preferred_roles:
+        role_filters = [Job.title.ilike(f"%{role}%") for role in profile.preferred_roles]
+        query = query.where(or_(*role_filters))
+        
+    if profile.preferred_locations:
+        loc_filters = [Job.location.ilike(f"%{loc}%") for loc in profile.preferred_locations]
+        query = query.where(or_(*loc_filters))
+        
+    if profile.target_salary:
+        query = query.where(
+            or_(
+                Job.salary_max >= profile.target_salary,
+                Job.salary_min >= profile.target_salary
+            )
+        )
+        
+    query = query.order_by(Job.posted_at.desc().nulls_last()).limit(100)
+    result = await db.execute(query)
     jobs = result.scalars().all()
     
-    response = []
+    filtered_jobs = []
+    
     for job in jobs:
+        title_lower = job.title.lower() if job.title else ""
+        desc_lower = job.description.lower() if job.description else ""
+        tags_lower = [t.lower() for t in job.tags] if job.tags else []
+        full_text = f"{title_lower} {desc_lower} {' '.join(tags_lower)}"
+        
+        # 1. Experience Level Heuristics
+        if profile.experience_level:
+            exp = profile.experience_level.lower()
+            is_senior = "senior" in full_text or "lead" in full_text or "principal" in full_text or "manager" in full_text
+            is_entry = "entry" in full_text or "junior" in full_text or "intern" in full_text or "graduate" in full_text
+            
+            if exp == "entry" and is_senior:
+                continue
+            if (exp == "senior" or exp == "lead") and is_entry:
+                continue
+                
+        # 2. Education Level Heuristics
+        if profile.education_level:
+            edu = profile.education_level.lower()
+            req_phd = "phd" in full_text or "ph.d" in full_text or "doctorate" in full_text
+            req_masters = "master" in full_text or "msc" in full_text or req_phd
+            req_bachelors = "bachelor" in full_text or "bsc" in full_text or "bs" in full_text or req_masters
+            
+            if edu == "none" and (req_bachelors or req_masters or req_phd):
+                continue
+            if edu == "bachelors" and (req_masters or req_phd):
+                continue
+            if edu == "masters" and req_phd:
+                continue
+                
+        # 3. Skills Match
+        if profile.skills:
+            if len(desc_lower) > 50:
+                skill_matched = any(skill.lower() in full_text for skill in profile.skills)
+                if not skill_matched:
+                    continue
+        
         job_dict = JobResponse.model_validate(job).model_dump()
         job_dict["source_name"] = job.source.name if job.source else "unknown"
-        response.append(job_dict)
-    return response
+        
+        filtered_jobs.append(job_dict)
+        
+    return filtered_jobs
 
 
 
