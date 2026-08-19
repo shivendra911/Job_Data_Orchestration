@@ -3,83 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentation - Ingestion Pipeline</title>
-    <link rel="stylesheet" href="/static/site.css">
-    <script>
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'brutalist') {
-            document.documentElement.setAttribute('data-theme', 'brutalist');
-        }
-    </script>
+    <title>Documentation - IngestPipe</title>
+    <link rel="stylesheet" href="/static/landing.css">
 </head>
-<body>
-    <nav class="site-nav">
-        <a href="/" class="site-nav-logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-            IngestPipe
-        </a>
-        <div class="site-nav-links">
-            <a href="/search">Find Jobs</a>
-            <a href="/system">System</a>
-            <a href="/docs" class="active">Documentation</a>
-            <a href="/app" class="btn-primary">Dashboard</a>
+<body class="landing">
+
+    <!-- 1. NAVBAR -->
+    <nav class="l-nav">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="/" class="l-nav-brand">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                IngestPipe
+            </a>
+            <div class="l-nav-links">
+                <a href="/">Home</a>
+                <a href="/search">Find Jobs</a>
+                <a href="/system">System</a>
+                <a href="/docs" class="active" style="background: rgba(0,0,0,0.05); padding: 0.25rem 0.5rem; border-radius: 4px;">Docs</a>
+                <a href="/app" class="btn-primary">Open Dashboard</a>
+            </div>
         </div>
     </nav>
 
-    <main class="container">
-        <section class="hero" style="padding-bottom: 2rem; text-align: left;">
-            <h1>API Documentation</h1>
-            <p>Integrate our job orchestration pipeline directly into your systems.</p>
-        </section>
+    <!-- 2. HEADER -->
+    <header class="s-header container" style="border-bottom: none; padding-bottom: 2rem;">
+        <div class="s-label">DEVELOPER REFERENCE</div>
+        <h1>API Documentation</h1>
+        <p>Integrate our job orchestration pipeline directly into your systems.</p>
+    </header>
 
-        <div class="docs-layout">
-            <aside class="docs-sidebar">
-                <ul>
-                    <li><a href="#getting-started">Getting Started</a></li>
-                    <li><a href="#authentication">Authentication</a></li>
-                    <li><a href="#endpoints">Endpoints</a>
-                        <ul style="margin-left: 1rem; margin-top: 0.5rem; font-size: 0.9rem;">
-                            <li><a href="#get-jobs" style="color: var(--text-muted);">List Jobs</a></li>
-                            <li><a href="#get-sources" style="color: var(--text-muted);">List Sources</a></li>
-                            <li><a href="#trigger" style="color: var(--text-muted);">Trigger Ingestion</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#rate-limits">Rate Limits</a></li>
-                </ul>
-            </aside>
+    <!-- 3. DOCS LAYOUT -->
+    <div class="l-docs-layout">
+        
+        <aside class="l-docs-sidebar">
+            <ul>
+                <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#authentication">Authentication</a></li>
+                <li>
+                    <a href="#endpoints">Endpoints</a>
+                    <ul class="sub-nav">
+                        <li><a href="#get-jobs">List Jobs</a></li>
+                        <li><a href="#get-sources">List Sources</a></li>
+                        <li><a href="#trigger">Trigger Ingestion</a></li>
+                    </ul>
+                </li>
+                <li><a href="#rate-limits">Rate Limits</a></li>
+            </ul>
+        </aside>
+        
+        <article class="l-docs-content">
+            <h2 id="getting-started">Getting Started</h2>
+            <p>Our REST API provides predictable, resource-oriented URLs and uses standard HTTP verbs, authentication, and responses. Responses are returned in structured JSON formats mapped directly from our normalization engine.</p>
+            
+            <h2 id="authentication">Authentication</h2>
+            <p>Authenticate your account by including your secret API key in the request header. If a request is missing an API key, or if the API key is invalid, the API will return a 401 Unauthorized status code.</p>
+            <pre>Authorization: Bearer YOUR_API_KEY</pre>
+            
+            <h2 id="endpoints">Endpoints</h2>
+            
+            <h3 id="get-jobs">List Jobs</h3>
+            <p>Retrieve a paginated list of normalized job data across all sources.</p>
+            <pre>GET /api/v1/jobs?skip=0&limit=50</pre>
+            
+            <h3 id="get-sources">List Sources</h3>
+            <p>Get the health status, configurations, and latency metrics of all active source adapters.</p>
+            <pre>GET /api/v1/sources</pre>
+            
+            <h3 id="trigger">Trigger Ingestion</h3>
+            <p>Manually trigger a pipeline sync for a specific source adapter. This bypasses the scheduler and immediately queues an orchestration run.</p>
+            <pre>POST /api/v1/ingest/{source_name}</pre>
+            
+            <h2 id="rate-limits">Rate Limits</h2>
+            <p>Rate limits are enforced at the network edge based on your account quota. The standard integration tier defaults to 10,000 requests per IP address per day. Exceeding this limit will result in a 429 Too Many Requests response.</p>
+        </article>
+        
+    </div>
 
-            <article class="docs-content">
-                <h2 id="getting-started">Getting Started</h2>
-                <p>Our REST API provides predictable, resource-oriented URLs and uses standard HTTP verbs, authentication, and responses.</p>
-
-                <h2 id="authentication">Authentication</h2>
-                <p>Authenticate your account by including your secret API key in the request header.</p>
-                <pre>Authorization: Bearer YOUR_API_KEY</pre>
-
-                <h2 id="endpoints">Endpoints</h2>
-                
-                <h3 id="get-jobs" style="margin-top: 1.5rem;">List Jobs</h3>
-                <p>Retrieve a paginated list of normalized job data.</p>
-                <pre>GET /api/v1/jobs?skip=0&limit=50</pre>
-                
-                <h3 id="get-sources" style="margin-top: 1.5rem;">List Sources</h3>
-                <p>Get the health status and configurations of all active source adapters.</p>
-                <pre>GET /api/v1/sources</pre>
-
-                <h3 id="trigger" style="margin-top: 1.5rem;">Trigger Ingestion</h3>
-                <p>Manually trigger a sync for a specific source.</p>
-                <pre>POST /api/v1/ingest/{source_name}</pre>
-
-                <h2 id="rate-limits">Rate Limits</h2>
-                <p>Rate limits are enforced at the network edge based on your pricing tier. Standard tier defaults to 1,000 requests per IP address per day.</p>
-            </article>
+    <!-- 4. FOOTER -->
+    <footer class="l-footer container" style="border-top: 1px solid var(--l-border);">
+        <div class="l-footer-brand">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            IngestPipe
         </div>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 Ingestion Pipeline Systems. Built for engineering precision.</p>
+        <p class="l-footer-tag">Data Orchestration & Sync</p>
+        <div class="l-footer-links">
+            <a href="/search">Find Jobs</a> &middot; 
+            <a href="/system">System</a> &middot; 
+            <a href="/docs">Documentation</a>
         </div>
+        <p class="l-footer-copy">&copy; 2026 Ingestion Pipeline Systems</p>
     </footer>
+
 </body>
 </html>
