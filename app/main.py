@@ -98,9 +98,9 @@ def create_app() -> FastAPI:
     async def search():
         return FileResponse("static/search.html")
 
-    @app.get("/pricing", include_in_schema=False)
-    async def pricing():
-        return FileResponse("static/pricing.html")
+    @app.get("/system", include_in_schema=False)
+    async def system():
+        return FileResponse("static/system.html")
 
     @app.get("/docs", include_in_schema=False)
     async def docs():
