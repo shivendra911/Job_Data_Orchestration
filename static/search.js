@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('next-page');
     const pageInfo = document.getElementById('page-info');
 
+    const activeFiltersContainer = document.getElementById('active-filters-container');
+
     const savedJobsFilter = document.getElementById('saved-jobs-filter');
     
     // Formatting utilities
@@ -86,6 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
             applyFilters();
         }
     };
+
+
+    // Collapsible filters
+    document.querySelectorAll('.filter-header-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.classList.toggle('collapsed');
+            const content = btn.nextElementSibling;
+            if (content) content.classList.toggle('collapsed');
+        });
+    });
 
     // Initial Fetch
     fetchJobs();
@@ -170,6 +182,34 @@ document.addEventListener('DOMContentLoaded', () => {
             if (loadingIndicator) loadingIndicator.innerHTML = '<div style="color: var(--status-error);">Failed to load jobs. Please try again later.</div>';
         }
     }
+
+
+    window.removeFilter = (type, value) => {
+        if (type === 'saved') {
+            if (savedJobsFilter) savedJobsFilter.checked = false;
+        } else if (type === 'type') {
+            jobTypeFilters.forEach(cb => { if (cb.value === value) cb.checked = false; });
+        } else if (type === 'model') {
+            workModelFilters.forEach(cb => { if (cb.value === value) cb.checked = false; });
+        } else if (type === 'salary') {
+            if (salarySlider) {
+                salarySlider.value = 0;
+                if (salaryDisplay) salaryDisplay.textContent = 'Any';
+            }
+        }
+        applyFilters();
+    };
+    
+    window.clearAllFilters = () => {
+        if (savedJobsFilter) savedJobsFilter.checked = false;
+        jobTypeFilters.forEach(cb => cb.checked = false);
+        workModelFilters.forEach(cb => cb.checked = false);
+        if (salarySlider) {
+            salarySlider.value = 0;
+            if (salaryDisplay) salaryDisplay.textContent = 'Any';
+        }
+        applyFilters();
+    };
 
     function applyFilters() {
         const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
@@ -259,6 +299,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         currentPage = 1;
+        
+        // Render Active Filters Tags
+        if (activeFiltersContainer) {
+            activeFiltersContainer.innerHTML = '';
+            let hasFilters = false;
+            
+            const addTag = (label, type, value) => {
+                hasFilters = true;
+                const tag = document.createElement('div');
+                tag.className = 'active-filter-tag';
+                tag.innerHTML = `${label} <button onclick="removeFilter('${type}', '${value}')">&times;</button>`;
+                activeFiltersContainer.appendChild(tag);
+            };
+
+            if (showSavedOnly) addTag('Saved Jobs', 'saved', '');
+            
+            jobTypeFilters.forEach(cb => {
+                if (cb.checked) {
+                    addTag(cb.parentElement.textContent.trim(), 'type', cb.value);
+                }
+            });
+            
+            workModelFilters.forEach(cb => {
+                if (cb.checked) {
+                    addTag(cb.parentElement.textContent.trim(), 'model', cb.value);
+                }
+            });
+            
+            if (minSalary > 0) {
+                addTag(Min , 'salary', '');
+            }
+            
+            if (hasFilters) {
+                const clearBtn = document.createElement('button');
+                clearBtn.className = 'clear-all-btn';
+                clearBtn.textContent = 'Clear all';
+                clearBtn.onclick = clearAllFilters;
+                activeFiltersContainer.appendChild(clearBtn);
+            }
+        }
+        
         renderJobs();
     }
 
@@ -291,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.onclick = () => window.open(job.url, '_blank');
 
             // Formatting
-            let salaryStr = '<div class="job-meta-item"><span style="opacity:0.5">Salary not specified</span></div>';
+            let salaryStr = '';
             if (job.salary_min || job.salary_max) {
                 const cur = job.salary_currency || '$';
                 if (job.salary_min && job.salary_max && job.salary_min !== job.salary_max) {

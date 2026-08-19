@@ -154,6 +154,129 @@
             margin-bottom: 0;
         }
 
+
+        /* Collapsible Filters */
+        .filter-header-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 0;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            outline: none;
+        }
+        .filter-content {
+            display: block;
+        }
+        .filter-content.collapsed {
+            display: none;
+        }
+        .chevron {
+            transition: transform 0.2s;
+        }
+        .filter-header-toggle.collapsed .chevron {
+            transform: rotate(-90deg);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            cursor: pointer;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--border-subtle);
+            transition: .2s;
+            border-radius: 20px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .2s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: var(--text-main);
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(16px);
+        }
+
+        /* Active Filters */
+        .active-filters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            align-items: center;
+            min-height: 28px;
+        }
+        .active-filter-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-subtle);
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-main);
+        }
+        .active-filter-tag button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            line-height: 1;
+            margin-left: 0.2rem;
+        }
+        .active-filter-tag button:hover {
+            color: var(--status-error);
+        }
+        .clear-all-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 0.5rem;
+            padding: 0;
+        }
+
+        /* Clamp job title */
         .filter-group label.group-label {
             display: flex;
             align-items: center;
@@ -273,7 +396,11 @@
             font-weight: 600;
             color: var(--text-main);
             text-decoration: none;
-            line-height: 1.2;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .job-title:hover {
@@ -435,19 +562,27 @@
                 </div>
 
                 <div class="filter-group" style="background-color: var(--bg-panel); padding: 0.75rem; border-radius: 6px; border: 1px solid var(--border-subtle);">
-                    <label class="checkbox-label" style="margin: 0;">
-                        <input type="checkbox" id="saved-jobs-filter">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                        Saved Jobs Only
+                    <label class="toggle-switch-wrapper" style="margin: 0;">
+                        <span style="font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" style="color: var(--text-main);"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                            Saved Jobs Only
+                        </span>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="saved-jobs-filter">
+                            <span class="toggle-slider"></span>
+                        </div>
                     </label>
                 </div>
 
                 <div class="filter-group">
-                    <label class="group-label">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                        Job Type
-                    </label>
-                    <div class="checkbox-group">
+                    <button class="filter-header-toggle">
+                        <span style="display: flex; align-items: center; gap: 0.5rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                            Job Type
+                        </span>
+                        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="checkbox-group filter-content">
                         <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="full-time"> Full-time</label>
                         <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="part-time"> Part-time</label>
                         <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="internship"> Internship</label>
@@ -456,11 +591,14 @@
                 </div>
 
                 <div class="filter-group">
-                    <label class="group-label">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                        Work Model
-                    </label>
-                    <div class="checkbox-group">
+                    <button class="filter-header-toggle">
+                        <span style="display: flex; align-items: center; gap: 0.5rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                            Work Model
+                        </span>
+                        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="checkbox-group filter-content">
                         <label class="checkbox-label"><input type="checkbox" class="work-model-filter" value="remote"> Remote</label>
                         <label class="checkbox-label"><input type="checkbox" class="work-model-filter" value="hybrid"> Hybrid</label>
                         <label class="checkbox-label"><input type="checkbox" class="work-model-filter" value="on-site"> On-site</label>
@@ -468,11 +606,14 @@
                 </div>
 
                 <div class="filter-group">
-                    <label class="group-label" for="salary-slider">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                        Minimum Salary <span style="font-weight:normal; opacity:0.7;">(optional)</span>
-                    </label>
-                    <div class="range-slider-wrapper">
+                    <button class="filter-header-toggle">
+                        <span style="display: flex; align-items: center; gap: 0.5rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            Minimum Salary
+                        </span>
+                        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="range-slider-wrapper filter-content">
                         <input type="range" id="salary-slider" class="range-slider" min="0" max="250000" step="5000" value="0">
                         <div class="range-value-display">
                             <span>Any</span>
@@ -496,6 +637,9 @@
                     </div>
                 </div>
 
+
+                <div id="active-filters-container" class="active-filters-container"></div>
+                
                 <div id="loading-indicator">
                     <div class="spinner"></div>
                     <div>Fetching latest data from pipeline...</div>
