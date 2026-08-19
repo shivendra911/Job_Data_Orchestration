@@ -2,7 +2,6 @@ import asyncio
 from app.database.session import create_engine_and_session
 from app.models.database import Source
 from app.core.config import settings
-from sqlalchemy.dialects.sqlite import insert
 
 async def seed():
     engine, session_factory = create_engine_and_session(settings.DATABASE_URL)
@@ -15,12 +14,19 @@ async def seed():
 
     async with session_factory() as session:
         for source_data in sources:
-            stmt = insert(Source).values(**source_data)
-            stmt = stmt.on_conflict_do_update(
-                index_elements=['name'],
-                set_=source_data
-            )
-            await session.execute(stmt)
+            # Check if source exists
+            from sqlalchemy import select
+            stmt = select(Source).where(Source.name == source_data["name"])
+            result = await session.execute(stmt)
+            existing = result.scalars().first()
+            
+            if not existing:
+                new_source = Source(**source_data)
+                session.add(new_source)
+            else:
+                existing.base_url = source_data["base_url"]
+                existing.adapter_type = source_data["adapter_type"]
+        
         await session.commit()
     await engine.dispose()
     print("Database seeded with default sources.")

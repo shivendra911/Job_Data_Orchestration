@@ -26,5 +26,5 @@ USER myuser
 # Hugging Face Spaces requires port 7860
 EXPOSE 7860
 
-# Run database migrations, then start the Uvicorn server
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 7860"]
+# Run database migrations, seed data, then start the Uvicorn server
+CMD ["sh", "-c", "alembic upgrade head && python seed.py && uvicorn app.main:app --host 0.0.0.0 --port 7860"]
