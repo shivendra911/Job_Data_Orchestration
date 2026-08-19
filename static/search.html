@@ -624,7 +624,7 @@
             </aside>
 
             <!-- Results Area -->
-            <section class="results-area">
+            <section class="results-area" style="width: 100%; min-width: 0;">
                 <div class="search-stats" id="search-stats-container" style="display: none;">
                     <span id="search-stats-text" style="font-weight: 500; color: var(--text-main);">Showing 0 jobs</span>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -645,7 +645,7 @@
                     <div>Fetching latest data from pipeline...</div>
                 </div>
 
-                <div id="jobs-container">
+                <div id="jobs-container" style="width: 100%; display: flex; flex-direction: column; align-items: stretch;">
                     <!-- Job cards rendered here by JS -->
                 </div>
 
