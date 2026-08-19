@@ -30,9 +30,14 @@ class Settings(BaseSettings):
         """Ensure Render/Heroku standard postgres:// URLs are converted to use the async driver"""
         if isinstance(v, str):
             if v.startswith("postgres://"):
-                return v.replace("postgres://", "postgresql+asyncpg://", 1)
+                v = v.replace("postgres://", "postgresql+asyncpg://", 1)
             elif v.startswith("postgresql://") and not v.startswith("postgresql+asyncpg://"):
-                return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+                v = v.replace("postgresql://", "postgresql+asyncpg://", 1)
+            
+            # asyncpg does not support 'sslmode', it requires 'ssl' instead
+            if "sslmode=" in v:
+                v = v.replace("sslmode=", "ssl=")
+                
         return v or "sqlite+aiosqlite:///./jobingestion.db"
     DB_POOL_SIZE: int = 5
     DB_MAX_OVERFLOW: int = 10
