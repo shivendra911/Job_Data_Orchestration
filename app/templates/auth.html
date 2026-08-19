@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Authentication - IngestPipe{% endblock %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 400px; margin: 4rem auto; padding: 2rem; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 id="auth-title" style="margin-bottom: 0.5rem; font-weight: 500;">Welcome Back</h2>
+        <p id="auth-subtitle" style="color: var(--text-muted); font-size: 0.9rem;">Sign in to your account</p>
+    </div>
+
+    <form id="auth-form" onsubmit="handleAuth(event)">
+        <div style="margin-bottom: 1rem;">
+            <label for="email" style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Email Address</label>
+            <input type="email" id="email" required style="width: 100%; padding: 0.75rem; background: var(--bg-main); border: 1px solid var(--border-subtle); color: var(--text-main); border-radius: 4px; box-sizing: border-box;">
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="password" style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Password</label>
+            <input type="password" id="password" required style="width: 100%; padding: 0.75rem; background: var(--bg-main); border: 1px solid var(--border-subtle); color: var(--text-main); border-radius: 4px; box-sizing: border-box;">
+        </div>
+        
+        <div id="auth-error" style="color: #ff4a4a; font-size: 0.85rem; margin-bottom: 1rem; display: none;"></div>
+        
+        <button type="submit" class="btn-primary" style="width: 100%; padding: 0.75rem; border: none; border-radius: 4px; font-weight: 500; cursor: pointer; transition: opacity 0.2s;">
+            <span id="auth-btn-text">Sign In</span>
+        </button>
+    </form>
+    
+    <div style="margin-top: 1.5rem; text-align: center; font-size: 0.9rem; color: var(--text-muted);">
+        <span id="auth-switch-text">Don't have an account?</span>
+        <a href="#" onclick="toggleAuthMode(event)" style="color: var(--primary); text-decoration: none; margin-left: 0.5rem;">Sign Up</a>
+    </div>
+</div>
+
+<script>
+    let isLoginMode = true;
+    
+    function toggleAuthMode(e) {
+        e.preventDefault();
+        isLoginMode = !isLoginMode;
+        
+        document.getElementById('auth-title').innerText = isLoginMode ? 'Welcome Back' : 'Create an Account';
+        document.getElementById('auth-subtitle').innerText = isLoginMode ? 'Sign in to your account' : 'Sign up to get personalized jobs';
+        document.getElementById('auth-btn-text').innerText = isLoginMode ? 'Sign In' : 'Sign Up';
+        document.getElementById('auth-switch-text').innerText = isLoginMode ? "Don't have an account?" : 'Already have an account?';
+        e.target.innerText = isLoginMode ? 'Sign Up' : 'Sign In';
+        document.getElementById('auth-error').style.display = 'none';
+    }
+    
+    async function handleAuth(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const errorDiv = document.getElementById('auth-error');
+        const btn = e.target.querySelector('button');
+        
+        btn.style.opacity = '0.7';
+        btn.disabled = true;
+        errorDiv.style.display = 'none';
+        
+        try {
+            if (isLoginMode) {
+                // Login uses OAuth2 form data
+                const formData = new URLSearchParams();
+                formData.append('username', email);
+                formData.append('password', password);
+                
+                const res = await fetch('/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData
+                });
+                
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.detail || 'Login failed');
+                }
+                
+                const data = await res.json();
+                localStorage.setItem('token', data.access_token);
+                window.location.href = '/search';
+            } else {
+                // Register uses JSON payload
+                const res = await fetch('/api/v1/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.detail || 'Registration failed');
+                }
+                
+                const data = await res.json();
+                localStorage.setItem('token', data.access_token);
+                window.location.href = '/profile';
+            }
+        } catch (err) {
+            errorDiv.innerText = err.message;
+            errorDiv.style.display = 'block';
+        } finally {
+            btn.style.opacity = '1';
+            btn.disabled = false;
+        }
+    }
+    
+    // Redirect if already logged in
+    if (localStorage.getItem('token')) {
+        window.location.href = '/search';
+    }
+</script>
+{% endblock %}

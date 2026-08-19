@@ -110,6 +110,14 @@ def create_app() -> FastAPI:
     @app.get("/app", include_in_schema=False)
     async def app_dashboard(request: Request):
         return templates.TemplateResponse(request=request, name="dashboard.html", context={"request": request, "active_page": "dashboard"})
+
+    @app.get("/auth", include_in_schema=False)
+    async def auth_page(request: Request):
+        return templates.TemplateResponse(request=request, name="auth.html", context={"request": request, "active_page": "auth"})
+
+    @app.get("/profile", include_in_schema=False)
+    async def profile_page(request: Request):
+        return templates.TemplateResponse(request=request, name="profile.html", context={"request": request, "active_page": "profile"})
         
     return app
 

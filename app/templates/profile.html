@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - IngestPipe{% endblock %}
+
+{% block content %}
+<div class="profile-container" style="max-width: 600px; margin: 4rem auto; padding: 2rem; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px;">
+    <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="margin-bottom: 0.5rem; font-weight: 500;">Your Profile</h2>
+            <p id="profile-email" style="color: var(--text-muted); font-size: 0.9rem;">Loading...</p>
+        </div>
+        <button onclick="logout()" style="padding: 0.5rem 1rem; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-main); border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Sign Out</button>
+    </div>
+
+    <form id="profile-form" onsubmit="savePreferences(event)">
+        <h3 style="margin-bottom: 1rem; font-size: 1.1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem;">Job Preferences</h3>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="roles" style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Preferred Roles (comma separated)</label>
+            <input type="text" id="roles" placeholder="e.g. Data Engineer, Python Developer" style="width: 100%; padding: 0.75rem; background: var(--bg-main); border: 1px solid var(--border-subtle); color: var(--text-main); border-radius: 4px; box-sizing: border-box;">
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label for="locations" style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Preferred Locations (comma separated)</label>
+            <input type="text" id="locations" placeholder="e.g. Remote, New York, London" style="width: 100%; padding: 0.75rem; background: var(--bg-main); border: 1px solid var(--border-subtle); color: var(--text-main); border-radius: 4px; box-sizing: border-box;">
+        </div>
+        
+        <div style="margin-bottom: 2rem;">
+            <label for="salary" style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Target Minimum Salary (USD)</label>
+            <input type="number" id="salary" placeholder="e.g. 100000" style="width: 100%; padding: 0.75rem; background: var(--bg-main); border: 1px solid var(--border-subtle); color: var(--text-main); border-radius: 4px; box-sizing: border-box;">
+        </div>
+        
+        <div id="profile-msg" style="font-size: 0.85rem; margin-bottom: 1rem; display: none;"></div>
+        
+        <button type="submit" class="btn-primary" style="width: 100%; padding: 0.75rem; border: none; border-radius: 4px; font-weight: 500; cursor: pointer; transition: opacity 0.2s;">
+            Save Preferences
+        </button>
+    </form>
+</div>
+
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/auth';
+    }
+    
+    async function loadProfile() {
+        try {
+            const res = await fetch('/api/v1/users/me', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) {
+                if (res.status === 401) logout();
+                throw new Error('Failed to load profile');
+            }
+            const data = await res.json();
+            
+            document.getElementById('profile-email').innerText = data.email;
+            document.getElementById('roles').value = (data.preferred_roles || []).join(', ');
+            document.getElementById('locations').value = (data.preferred_locations || []).join(', ');
+            document.getElementById('salary').value = data.target_salary || '';
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    
+    async function savePreferences(e) {
+        e.preventDefault();
+        const msgDiv = document.getElementById('profile-msg');
+        msgDiv.style.display = 'none';
+        
+        const roles = document.getElementById('roles').value.split(',').map(s => s.trim()).filter(s => s);
+        const locations = document.getElementById('locations').value.split(',').map(s => s.trim()).filter(s => s);
+        const salary = parseInt(document.getElementById('salary').value) || null;
+        
+        try {
+            const res = await fetch('/api/v1/users/me/preferences', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    preferred_roles: roles,
+                    preferred_locations: locations,
+                    target_salary: salary
+                })
+            });
+            
+            if (!res.ok) throw new Error('Failed to save preferences');
+            
+            msgDiv.innerText = 'Preferences saved successfully!';
+            msgDiv.style.color = '#00c853';
+            msgDiv.style.display = 'block';
+            setTimeout(() => { msgDiv.style.display = 'none'; }, 3000);
+        } catch (err) {
+            msgDiv.innerText = err.message;
+            msgDiv.style.color = '#ff4a4a';
+            msgDiv.style.display = 'block';
+        }
+    }
+    
+    function logout() {
+        localStorage.removeItem('token');
+        window.location.href = '/auth';
+    }
+    
+    // Load profile on page load
+    loadProfile();
+</script>
+{% endblock %}

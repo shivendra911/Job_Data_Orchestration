@@ -46,6 +46,57 @@ async def list_jobs(
     return response
 
 
+from app.api.deps import get_current_user
+from app.models.user import User, UserProfile
+from sqlalchemy import or_
+
+@router.get("/recommended")
+async def recommended_jobs(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100)
+):
+    """Get personalized job recommendations based on user profile preferences."""
+    # Fetch user profile
+    stmt = select(UserProfile).where(UserProfile.user_id == current_user.id)
+    result = await db.execute(stmt)
+    profile = result.scalars().first()
+    
+    # Base query
+    stmt = select(Job).options(selectinload(Job.source)).where(Job.is_active == True)
+    
+    if profile:
+        conditions = []
+        if profile.preferred_roles:
+            role_conditions = [Job.title.ilike(f"%{role}%") for role in profile.preferred_roles]
+            conditions.append(or_(*role_conditions))
+            
+        if profile.preferred_locations:
+            loc_conditions = [Job.location.ilike(f"%{loc}%") for loc in profile.preferred_locations]
+            conditions.append(or_(*loc_conditions))
+            
+        if profile.target_salary:
+            conditions.append(Job.salary_min >= profile.target_salary)
+            
+        if conditions:
+            # For recommendations, we match ANY of the conditions (OR)
+            stmt = stmt.where(or_(*conditions))
+            
+    stmt = stmt.order_by(Job.posted_at.desc().nulls_last()).offset(skip).limit(limit)
+    
+    result = await db.execute(stmt)
+    jobs = result.scalars().all()
+    
+    response = []
+    for job in jobs:
+        job_dict = JobResponse.model_validate(job).model_dump()
+        job_dict["source_name"] = job.source.name if job.source else "unknown"
+        response.append(job_dict)
+    return response
+
+
+
 import csv
 import io
 from fastapi.responses import StreamingResponse

@@ -1,9 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     // State
     let allJobs = [];
+    let recommendedJobs = [];
     let filteredJobs = [];
     let currentPage = 1;
     const itemsPerPage = 15;
+    
+    // Auth state
+    const token = localStorage.getItem('token');
+    const isAuthenticated = !!token;
 
     // DOM Elements
     const searchInput = document.getElementById('hero-search-input');
@@ -31,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeFiltersContainer = document.getElementById('active-filters-container');
 
     const savedJobsFilter = document.getElementById('saved-jobs-filter');
+    const forYouFilter = document.getElementById('for-you-filter');
     
     // Formatting utilities
     const formatCurrency = (num) => {
@@ -58,37 +64,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Saved Jobs Logic
     let savedJobs = [];
-    try {
-        savedJobs = JSON.parse(localStorage.getItem('savedJobs')) || [];
-    } catch (e) {
-        console.error('Error loading saved jobs', e);
-    }
     
-    window.toggleSaveJob = (e, jobId) => {
+    window.toggleSaveJob = async (e, jobId) => {
         e.preventDefault();
         e.stopPropagation();
         
-        if (savedJobs.includes(jobId)) {
+        if (!isAuthenticated) {
+            window.location.href = '/auth';
+            return;
+        }
+        
+        const isSaved = savedJobs.includes(jobId);
+        
+        // Optimistic UI update
+        if (isSaved) {
             savedJobs = savedJobs.filter(id => id !== jobId);
         } else {
             savedJobs.push(jobId);
         }
-        localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
         
-        // Update the button icon visually
-        const btn = document.querySelector(`.save-btn[data-job-id="${jobId}"]`);
-        if (btn) {
-            btn.innerHTML = savedJobs.includes(jobId) 
-                ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" style="color: var(--text-main);"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>'
-                : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>';
+        updateSaveButtonIcon(jobId);
+        
+        try {
+            if (isSaved) {
+                await fetch(`/api/v1/users/me/saved_jobs/${jobId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+            } else {
+                await fetch(`/api/v1/users/me/saved_jobs/${jobId}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+            }
+        } catch (err) {
+            console.error('Failed to sync saved job', err);
         }
-        
+
         // Re-filter if we are currently looking at saved jobs
         if (savedJobsFilter && savedJobsFilter.checked) {
             applyFilters();
         }
     };
 
+    function updateSaveButtonIcon(jobId) {
+        const btns = document.querySelectorAll(`.save-btn[data-job-id="${jobId}"]`);
+        btns.forEach(btn => {
+            btn.innerHTML = savedJobs.includes(jobId) 
+                ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" style="color: var(--text-main);"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>'
+                : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>';
+        });
+    }
 
     // Collapsible filters
     document.querySelectorAll('.filter-header-toggle').forEach(btn => {
@@ -98,9 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (content) content.classList.toggle('collapsed');
         });
     });
-
-    // Initial Fetch
-    fetchJobs();
 
     // Event Listeners for Filters
     if (searchInput) {
@@ -113,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (searchBtn) searchBtn.addEventListener('click', applyFilters);
     if (savedJobsFilter) savedJobsFilter.addEventListener('change', applyFilters);
+    if (forYouFilter) forYouFilter.addEventListener('change', applyFilters);
     
     jobTypeFilters.forEach(cb => cb.addEventListener('change', applyFilters));
     workModelFilters.forEach(cb => cb.addEventListener('change', applyFilters));
@@ -130,17 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (resetBtn) {
         resetBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            if (searchInput) searchInput.value = '';
-            if (locationInput) locationInput.value = '';
-            
-            if (savedJobsFilter) savedJobsFilter.checked = false;
-            jobTypeFilters.forEach(cb => cb.checked = false);
-            workModelFilters.forEach(cb => cb.checked = false);
-            
-            if (salarySlider) salarySlider.value = 0;
-            if (salaryDisplay) salaryDisplay.textContent = 'Any';
-            if (sortSelect) sortSelect.value = 'newest';
-            applyFilters();
+            clearAllFilters();
         });
     }
 
@@ -166,7 +180,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function fetchJobs() {
+    async function init() {
+        if (isAuthenticated) {
+            document.querySelectorAll('.auth-only').forEach(el => el.style.display = 'block');
+            
+            // Fetch saved jobs
+            try {
+                const res = await fetch('/api/v1/users/me/saved_jobs', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    savedJobs = data.map(j => j.id);
+                }
+            } catch (err) {
+                console.error("Error fetching saved jobs", err);
+            }
+            
+            // Fetch recommended jobs in background
+            fetch('/api/v1/jobs/recommended', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            }).then(r => r.json()).then(data => {
+                recommendedJobs = data;
+            }).catch(e => console.error("Error fetching recommended jobs", e));
+        }
+
         try {
             const response = await fetch('/api/v1/jobs/export/json');
             if (!response.ok) throw new Error('Failed to fetch jobs');
@@ -183,10 +221,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    init();
 
     window.removeFilter = (type, value) => {
         if (type === 'saved') {
             if (savedJobsFilter) savedJobsFilter.checked = false;
+        } else if (type === 'foryou') {
+            if (forYouFilter) forYouFilter.checked = false;
         } else if (type === 'type') {
             jobTypeFilters.forEach(cb => { if (cb.value === value) cb.checked = false; });
         } else if (type === 'model') {
@@ -201,13 +242,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     window.clearAllFilters = () => {
+        if (searchInput) searchInput.value = '';
+        if (locationInput) locationInput.value = '';
         if (savedJobsFilter) savedJobsFilter.checked = false;
+        if (forYouFilter) forYouFilter.checked = false;
         jobTypeFilters.forEach(cb => cb.checked = false);
         workModelFilters.forEach(cb => cb.checked = false);
         if (salarySlider) {
             salarySlider.value = 0;
             if (salaryDisplay) salaryDisplay.textContent = 'Any';
         }
+        if (sortSelect) sortSelect.value = 'newest';
         applyFilters();
     };
 
@@ -218,10 +263,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const sortOrder = sortSelect ? sortSelect.value : 'newest';
         
         const showSavedOnly = savedJobsFilter ? savedJobsFilter.checked : false;
+        const showForYouOnly = forYouFilter ? forYouFilter.checked : false;
         const selectedJobTypes = jobTypeFilters.filter(cb => cb.checked).map(cb => cb.value);
         const selectedWorkModels = workModelFilters.filter(cb => cb.checked).map(cb => cb.value);
 
-        filteredJobs = allJobs.filter(job => {
+        let sourceJobs = showForYouOnly ? recommendedJobs : allJobs;
+
+        filteredJobs = sourceJobs.filter(job => {
             if (showSavedOnly && !savedJobs.includes(job.id)) {
                 return false;
             }
@@ -251,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Job Type Heuristics (fallback if actual tags aren't perfectly aligned)
+            // Job Type Heuristics
             let matchesJobType = true;
             if (selectedJobTypes.length > 0) {
                 const titleLower = job.title.toLowerCase();
@@ -314,6 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             if (showSavedOnly) addTag('Saved Jobs', 'saved', '');
+            if (showForYouOnly) addTag('For You', 'foryou', '');
             
             jobTypeFilters.forEach(cb => {
                 if (cb.checked) {
@@ -328,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             if (minSalary > 0) {
-                addTag(Min , 'salary', '');
+                addTag('Min ' + formatCurrency(minSalary), 'salary', '');
             }
             
             if (hasFilters) {
@@ -359,6 +408,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             const showSavedOnly = savedJobsFilter ? savedJobsFilter.checked : false;
+            const showForYouOnly = forYouFilter ? forYouFilter.checked : false;
+            
             if (showSavedOnly && savedJobs.length === 0) {
                 emptyHtml = `
                     <div class="job-card" style="text-align: center; padding: 4rem 2rem; border-style: dashed; cursor: default; width: 100%; box-sizing: border-box;">
@@ -368,12 +419,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button class="btn-primary" onclick="removeFilter('saved', '')" style="padding: 0.5rem 1.5rem; border-radius: 6px;">Browse Jobs</button>
                     </div>
                 `;
-            } else if (showSavedOnly && savedJobs.length > 0) {
+            } else if (showForYouOnly && recommendedJobs.length === 0) {
                 emptyHtml = `
                     <div class="job-card" style="text-align: center; padding: 4rem 2rem; border-style: dashed; cursor: default; width: 100%; box-sizing: border-box;">
-                        <h3 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 0.5rem;">No saved jobs match your current filters.</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Try adjusting your search terms or relaxing your filters.</p>
-                        <button class="btn-secondary" onclick="clearAllFilters()" style="padding: 0.5rem 1rem; border-radius: 6px;">Clear all filters</button>
+                        <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--text-muted);">✨</div>
+                        <h3 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 0.5rem;">No recommendations yet</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.4;">Update your profile preferences to get<br>personalized job recommendations.</p>
+                        <a href="/profile" class="btn-primary" style="padding: 0.5rem 1.5rem; border-radius: 6px; text-decoration: none;">Update Profile</a>
                     </div>
                 `;
             }
@@ -415,9 +467,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 tagsHtml = job.tags.slice(0, 4).map(t => `<span class="tag">${t}</span>`).join('');
             }
             
-            // Remove the 6ecb8843 fallback tag as requested
-            // let sourceTag = `<span class="tag" style="background: var(--text-main); color: var(--bg-main); border: none;">${job.source_name || job.source_id.split('-')[0]}</span>`;
-
             // Initials for company logo
             const companyName = job.company || 'Unknown';
             const initials = companyName.substring(0, 1).toUpperCase();

@@ -21,10 +21,20 @@
                 <a href="/search" data-text="Find Jobs" {% if active_page == 'search' %}class="active"{% endif %}>Find Jobs</a>
                 <a href="/system" data-text="System" {% if active_page == 'system' %}class="active"{% endif %}>System</a>
                 <a href="/docs" data-text="Docs" {% if active_page == 'docs' %}class="active"{% endif %}>Docs</a>
-                <a href="/app" class="btn-primary">Open Dashboard</a>
+                <a id="nav-auth-link" href="/auth" data-text="Sign In" {% if active_page == 'auth' or active_page == 'profile' %}class="active"{% endif %}>Sign In</a>
+                <a href="/app" class="btn-primary">Dashboard</a>
             </div>
         </div>
     </nav>
+    <script>
+        // Update nav based on auth state immediately to prevent flash
+        if (localStorage.getItem('token')) {
+            const authLink = document.getElementById('nav-auth-link');
+            authLink.href = '/profile';
+            authLink.innerText = 'Profile';
+            authLink.setAttribute('data-text', 'Profile');
+        }
+    </script>
 
     {% block content %}
     {% endblock %}
