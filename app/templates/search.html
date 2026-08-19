@@ -483,27 +483,76 @@
             font-size: 0.85rem;
         }
 
-        #loading-indicator {
-            text-align: center;
-            padding: 4rem;
-            color: var(--text-muted);
+        /* Skeleton Loader */
+        .skeleton-card {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-subtle);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
             display: flex;
             flex-direction: column;
-            align-items: center;
             gap: 1rem;
+            width: 100%;
+            box-sizing: border-box;
         }
-        
-        .spinner {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--border-subtle);
-            border-top-color: var(--text-muted);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+
+        .skeleton-row {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
         }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+
+        .skeleton-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            background: var(--bg-panel);
+            flex-shrink: 0;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .skeleton-text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .skeleton-title {
+            height: 18px;
+            width: 60%;
+            background: var(--bg-panel);
+            border-radius: 4px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .skeleton-company {
+            height: 14px;
+            width: 30%;
+            background: var(--bg-panel);
+            border-radius: 4px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .skeleton-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.25rem;
+        }
+
+        .skeleton-meta-item {
+            height: 14px;
+            width: 80px;
+            background: var(--bg-panel);
+            border-radius: 4px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.4; }
         }
 
         @media (max-width: 768px) {
@@ -521,7 +570,7 @@
 {% endblock %}
 
 {% block content %}
- Hero Search Area <div class="hero-search-container">
+<div class="hero-search-container">
 <div class="container">
 <h1 class="hero-title">Find Your Next Role</h1>
 <div class="hero-search-wrapper">
@@ -616,17 +665,57 @@
 </div>
 </div>
 <div class="active-filters-container" id="active-filters-container"></div>
-<div id="loading-indicator">
-<div class="spinner"></div>
-<div>Fetching latest data from pipeline...</div>
+<div id="loading-indicator" style="width: 100%;">
+    <!-- Skeleton Cards -->
+    <div class="skeleton-card">
+        <div class="skeleton-row">
+            <div class="skeleton-logo"></div>
+            <div class="skeleton-text-block">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-company"></div>
+            </div>
+        </div>
+        <div class="skeleton-meta">
+            <div class="skeleton-meta-item" style="width: 100px;"></div>
+            <div class="skeleton-meta-item" style="width: 60px;"></div>
+            <div class="skeleton-meta-item" style="width: 80px;"></div>
+        </div>
+    </div>
+    <div class="skeleton-card">
+        <div class="skeleton-row">
+            <div class="skeleton-logo"></div>
+            <div class="skeleton-text-block">
+                <div class="skeleton-title" style="width: 75%;"></div>
+                <div class="skeleton-company" style="width: 40%;"></div>
+            </div>
+        </div>
+        <div class="skeleton-meta">
+            <div class="skeleton-meta-item" style="width: 80px;"></div>
+            <div class="skeleton-meta-item" style="width: 120px;"></div>
+        </div>
+    </div>
+    <div class="skeleton-card">
+        <div class="skeleton-row">
+            <div class="skeleton-logo"></div>
+            <div class="skeleton-text-block">
+                <div class="skeleton-title" style="width: 50%;"></div>
+                <div class="skeleton-company" style="width: 25%;"></div>
+            </div>
+        </div>
+        <div class="skeleton-meta">
+            <div class="skeleton-meta-item" style="width: 90px;"></div>
+            <div class="skeleton-meta-item" style="width: 70px;"></div>
+            <div class="skeleton-meta-item" style="width: 80px;"></div>
+        </div>
+    </div>
 </div>
 <div id="jobs-container" style="width: 100%; display: flex; flex-direction: column; align-items: stretch;">
 <!-- Job cards rendered here by JS -->
 </div>
 <div class="pagination-controls" id="pagination-controls" style="display: none;">
-<button class="btn-secondary" disabled="" id="prev-page">← Prev</button>
+<button class="btn-secondary" disabled="" id="prev-page">&larr; Prev</button>
 <span id="page-info" style="font-family: var(--font-mono); font-size: 0.85rem;">Page 1</span>
-<button class="btn-secondary" id="next-page">Next →</button>
+<button class="btn-secondary" id="next-page">Next &rarr;</button>
 </div>
 </section>
 </div>

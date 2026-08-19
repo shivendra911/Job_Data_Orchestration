@@ -1,246 +1,268 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 
 {% block title %}IngestPipe - Data Orchestration{% endblock %}
 
 {% block head %}
-<link href="/static/landing.css" rel="stylesheet"/>
+
 {% endblock %}
 
 {% block content %}
- 1. NAVBAR  2. HERO SECTION <section class="l-hero container">
-<div class="l-hero-status">
-<div class="dot"></div> SYSTEM OPERATIONAL
+
+<!-- HERO SECTION -->
+<section class="l-hero container">
+    <div class="l-hero-status">
+        <div class="dot"></div> SYSTEM OPERATIONAL
+    </div>
+    <h1>Industrial-Grade Job Data<br/>Orchestration</h1>
+    <p>Ingest, normalize, monitor, and export job data through a resilient data pipeline built for scale.</p>
+    <div class="l-hero-actions">
+        <a class="btn-primary" href="/app">Open Dashboard &rarr;</a>
+        <a class="btn-secondary" href="/docs">Read Documentation</a>
+    </div>
+
+    <!-- PIPELINE VISUAL -->
+    <div class="l-pipe-visual">
+        <div class="l-pipe-node sources">
+            <div class="title">JOB SOURCES</div>
+            <div>arbeitnow</div>
+            <div>remotive</div>
+            <div>adzuna</div>
+            <div>themuse</div>
         </div>
-<h1>Industrial-Grade Job Data<br/>Orchestration</h1>
-<p>Ingest, normalize, monitor, and export job data through a resilient data pipeline built for scale.</p>
-<div class="l-hero-actions">
-<a class="btn-primary" href="/app">Open Dashboard →</a>
-<a class="btn-secondary" href="/docs">Read Documentation</a>
-</div>
-<!-- 3. PIPELINE VISUAL -->
-<div class="l-pipe-visual">
-<div class="l-pipe-node sources">
-<div class="title">JOB SOURCES</div>
-<div>arbeitnow</div>
-<div>remotive</div>
-<div>adzuna</div>
-<div>themuse</div>
-</div>
-<div class="l-pipe-arrow">
-<svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-</div>
-<div class="l-pipe-node">INGESTPIPE ENGINE</div>
-<div class="l-pipe-arrow">
-<svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-</div>
-<div class="l-pipe-node">NORMALIZED API</div>
-<div class="l-pipe-arrow">
-<svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-</div>
-<div class="l-pipe-node">DASHBOARD</div>
-</div>
-</section> 4. FROM SOURCE TO STRUCTURED DATA <section class="l-section container">
-<div class="l-section-header">
-<h2>From Source to Structured Data</h2>
-<p class="sub">A resilient pipeline that turns fragmented job sources into structured, usable data.</p>
-</div>
-<div class="l-process-grid">
-<div class="l-process-card">
-<h4>JOB SOURCES</h4>
-<p>Raw web data</p>
-</div>
-<div class="l-process-card">
-<h4>INGEST</h4>
-<p>Collect job data</p>
-</div>
-<div class="l-process-card">
-<h4>NORMALIZE</h4>
-<p>Consistent schema</p>
-</div>
-<div class="l-process-card">
-<h4>MONITOR</h4>
-<p>Track health</p>
-</div>
-<div class="l-process-card">
-<h4>EXPORT</h4>
-<p>JSON / CSV</p>
-</div>
-</div>
-</section> 5. DASHBOARD SHOWCASE & 6. KEY METRICS <section class="l-section container" style="text-align: center;">
-<div class="l-section-header">
-<h2>One Command Center for Your Job Data</h2>
-<p class="sub">Monitor every source, track ingestion activity, and access normalized job data from a single operational dashboard.</p>
-</div>
-<div class="l-dash-mockup">
-<div class="l-dash-header">
-<div class="l-dash-dots"><span></span><span></span><span></span></div>
-<div class="l-dash-url">ingestpipe.app</div>
-<div class="l-dash-spacer"></div>
-</div>
-<div class="l-dash-body">
-<div class="l-dash-inner">
-<div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 2rem; text-align: left;">INGESTPIPE APP</div>
-<div class="l-dash-stats-row">
-<div class="l-dash-stat">
-<h5>Active Sources</h5>
-<div class="val">12</div>
-</div>
-<div class="l-dash-stat">
-<h5>Ingested Jobs</h5>
-<div class="val">2,491,302</div>
-</div>
-<div class="l-dash-stat">
-<h5>Health Score</h5>
-<div class="val">99.9%</div>
-</div>
-</div>
-<div class="l-dash-cols text-left">
-<div class="l-dash-panel">
-<div class="l-dash-panel-title">Active Sources</div>
-<div class="l-dash-panel-body">
-<div class="l-dash-source-item">● arbeitnow</div>
-<div class="l-dash-source-item">● remotive</div>
-<div class="l-dash-source-item">● themuse</div>
-</div>
-</div>
-<div class="l-dash-panel">
-<div class="l-dash-panel-title">Ingested Data</div>
-<div class="l-dash-panel-body">
-<div class="l-dash-job-row"><span>Software Engineer</span> <span>Anthropic</span></div>
-<div class="l-dash-job-row"><span>Data Scientist</span> <span>OpenAI</span></div>
-<div class="l-dash-job-row"><span>Product Manager</span> <span>Linear</span></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="l-metrics">
-<div>
-<div class="l-metric-val">2,491,302</div>
-<div class="l-metric-label">Ingested Jobs</div>
-</div>
-<div>
-<div class="l-metric-val">12</div>
-<div class="l-metric-label">Active Sources</div>
-</div>
-<div>
-<div class="l-metric-val">99.9%</div>
-<div class="l-metric-label">Health Score</div>
-</div>
-<div>
-<div class="l-metric-val" style="font-size: 2rem; line-height: 2.5rem;">JSON / CSV</div>
-<div class="l-metric-label">Export Formats</div>
-</div>
-</div>
-</section> 7. BUILT FOR FAILURE <section class="l-section container">
-<div class="l-section-header">
-<h2>Built for Failure</h2>
-<p class="sub">Test failures before they become incidents.</p>
-</div>
-<div class="l-cards-3">
-<div class="l-card">
-<div class="l-card-icon">
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-</div>
-<h3>Chaos Engineering</h3>
-<p>Test downstream services with controlled network failures and observe how your pipeline responds.</p>
-<div class="l-tags">
-<span class="l-tag">502</span>
-<span class="l-tag">429</span>
-<span class="l-tag">LAT</span>
-</div>
-</div>
-<div class="l-card">
-<div class="l-card-icon">
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" x2="12" y1="2" y2="12"></line></svg>
-</div>
-<h3>Circuit Breakers</h3>
-<p>Automatically isolate unhealthy sources and prevent cascading failures across your infrastructure.</p>
-</div>
-<div class="l-card">
-<div class="l-card-icon">
-<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-</div>
-<h3>Resilient Pipelines</h3>
-<p>Keep ingestion operational even when individual sources fail.<br/><br/>Retry → Recover → Continue</p>
-</div>
-</div>
-</section> 8. OBSERVABILITY <section class="l-section container">
-<div class="l-section-header">
-<h2>Complete Visibility Into Your Pipeline</h2>
-<p class="sub">Know which sources are healthy, what has been ingested, and where failures occur.</p>
-</div>
-<div class="l-obs-cols">
-<div class="l-obs-panel">
-<div class="l-obs-header">ACTIVE SOURCES</div>
-<div class="l-obs-row">
-<div>● arbeitnow</div>
-<div class="l-obs-status green">HEALTHY</div>
-</div>
-<div class="l-obs-row">
-<div>● remotive</div>
-<div class="l-obs-status green">HEALTHY</div>
-</div>
-<div class="l-obs-row">
-<div>● adzuna</div>
-<div class="l-obs-status yellow">DEGRADED</div>
-</div>
-<div class="l-obs-row">
-<div>● themuse</div>
-<div class="l-obs-status green">HEALTHY</div>
-</div>
-</div>
-<div class="l-obs-panel">
-<div class="l-obs-header">INGESTED DATA</div>
-<div class="l-obs-row">
-<div style="font-weight:600;">Software Engineer</div>
-<div style="color:var(--l-sec);">Anthropic</div>
-</div>
-<div class="l-obs-row">
-<div style="font-weight:600;">Data Scientist</div>
-<div style="color:var(--l-sec);">OpenAI</div>
-</div>
-<div class="l-obs-row">
-<div style="font-weight:600;">Product Manager</div>
-<div style="color:var(--l-sec);">Linear</div>
-</div>
-</div>
-</div>
-</section> 9. WHY INGESTPIPE? <section class="l-section container">
-<div class="l-section-header">
-<h2>Everything You Need to Operate Job Data at Scale</h2>
-</div>
-<div class="l-why-grid">
-<div class="l-why-item">
-<div class="l-why-num">01</div>
-<h3 class="l-why-title">Multi-source ingestion</h3>
-<p class="l-why-desc">Collect data from multiple job platforms through a unified pipeline.</p>
-</div>
-<div class="l-why-item">
-<div class="l-why-num">02</div>
-<h3 class="l-why-title">Normalized schema</h3>
-<p class="l-why-desc">Convert inconsistent source formats into predictable structured data.</p>
-</div>
-<div class="l-why-item">
-<div class="l-why-num">03</div>
-<h3 class="l-why-title">Operational visibility</h3>
-<p class="l-why-desc">Monitor source health and ingestion activity from one place.</p>
-</div>
-<div class="l-why-item">
-<div class="l-why-num">04</div>
-<h3 class="l-why-title">Reliable recovery</h3>
-<p class="l-why-desc">Handle failures, retries, and degraded sources without stopping the pipeline.</p>
-</div>
-</div>
-</section> 10. FINAL CTA <section class="l-cta">
-<div class="container">
-<h2 style="font-size: 3rem; margin-bottom: 1rem;">Ready to Explore Your<br/>Data Pipeline?</h2>
-<p style="font-size: 1.25rem; margin-bottom: 2.5rem; color: var(--l-sec);">Monitor sources. Inspect data.<br/>Test resilience. Export.</p>
-<div class="l-hero-actions">
-<a class="btn-primary" href="/app">Open Dashboard</a>
-<a class="btn-secondary" href="/docs">Read Documentation</a>
-</div>
-</div>
-</section> 11. FOOTER 
+        <div class="l-pipe-arrow">
+            <svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+        <div class="l-pipe-node">INGESTPIPE ENGINE</div>
+        <div class="l-pipe-arrow">
+            <svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+        <div class="l-pipe-node">NORMALIZED API</div>
+        <div class="l-pipe-arrow">
+            <svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+        <div class="l-pipe-node">DASHBOARD</div>
+    </div>
+</section>
+
+<!-- FROM SOURCE TO STRUCTURED DATA -->
+<section class="l-section container">
+    <div class="l-section-header">
+        <h2>From Source to Structured Data</h2>
+        <p class="sub">A resilient pipeline that turns fragmented job sources into structured, usable data.</p>
+    </div>
+    <div class="l-process-grid">
+        <div class="l-process-card">
+            <h4>JOB SOURCES</h4>
+            <p>Raw web data</p>
+        </div>
+        <div class="l-process-card">
+            <h4>INGEST</h4>
+            <p>Collect job data</p>
+        </div>
+        <div class="l-process-card">
+            <h4>NORMALIZE</h4>
+            <p>Consistent schema</p>
+        </div>
+        <div class="l-process-card">
+            <h4>MONITOR</h4>
+            <p>Track health</p>
+        </div>
+        <div class="l-process-card">
+            <h4>EXPORT</h4>
+            <p>JSON / CSV</p>
+        </div>
+    </div>
+</section>
+
+<!-- DASHBOARD SHOWCASE & KEY METRICS -->
+<section class="l-section container" style="text-align: center;">
+    <div class="l-section-header">
+        <h2>One Command Center for Your Job Data</h2>
+        <p class="sub">Monitor every source, track ingestion activity, and access normalized job data from a single operational dashboard.</p>
+    </div>
+    <div class="l-dash-mockup">
+        <div class="l-dash-header">
+            <div class="l-dash-dots"><span></span><span></span><span></span></div>
+            <div class="l-dash-url">ingestpipe.app</div>
+            <div class="l-dash-spacer"></div>
+        </div>
+        <div class="l-dash-body">
+            <div class="l-dash-inner">
+                <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 2rem; text-align: left;">INGESTPIPE APP</div>
+                <div class="l-dash-stats-row">
+                    <div class="l-dash-stat">
+                        <h5>Active Sources</h5>
+                        <div class="val">12</div>
+                    </div>
+                    <div class="l-dash-stat">
+                        <h5>Ingested Jobs</h5>
+                        <div class="val">2,491,302</div>
+                    </div>
+                    <div class="l-dash-stat">
+                        <h5>Health Score</h5>
+                        <div class="val">99.9%</div>
+                    </div>
+                </div>
+                <div class="l-dash-cols text-left">
+                    <div class="l-dash-panel">
+                        <div class="l-dash-panel-title">Active Sources</div>
+                        <div class="l-dash-panel-body">
+                            <div class="l-dash-source-item">&#x25CF; arbeitnow</div>
+                            <div class="l-dash-source-item">&#x25CF; remotive</div>
+                            <div class="l-dash-source-item">&#x25CF; themuse</div>
+                        </div>
+                    </div>
+                    <div class="l-dash-panel">
+                        <div class="l-dash-panel-title">Ingested Data</div>
+                        <div class="l-dash-panel-body">
+                            <div class="l-dash-job-row"><span>Software Engineer</span> <span>Anthropic</span></div>
+                            <div class="l-dash-job-row"><span>Data Scientist</span> <span>OpenAI</span></div>
+                            <div class="l-dash-job-row"><span>Product Manager</span> <span>Linear</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="l-metrics">
+        <div>
+            <div class="l-metric-val">2,491,302</div>
+            <div class="l-metric-label">Ingested Jobs</div>
+        </div>
+        <div>
+            <div class="l-metric-val">12</div>
+            <div class="l-metric-label">Active Sources</div>
+        </div>
+        <div>
+            <div class="l-metric-val">99.9%</div>
+            <div class="l-metric-label">Health Score</div>
+        </div>
+        <div>
+            <div class="l-metric-val" style="font-size: 2rem; line-height: 2.5rem;">JSON / CSV</div>
+            <div class="l-metric-label">Export Formats</div>
+        </div>
+    </div>
+</section>
+
+<!-- BUILT FOR FAILURE -->
+<section class="l-section container">
+    <div class="l-section-header">
+        <h2>Built for Failure</h2>
+        <p class="sub">Test failures before they become incidents.</p>
+    </div>
+    <div class="l-cards-3">
+        <div class="l-card">
+            <div class="l-card-icon">
+                <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
+            <h3>Chaos Engineering</h3>
+            <p>Test downstream services with controlled network failures and observe how your pipeline responds.</p>
+            <div class="l-tags">
+                <span class="l-tag">502</span>
+                <span class="l-tag">429</span>
+                <span class="l-tag">LAT</span>
+            </div>
+        </div>
+        <div class="l-card">
+            <div class="l-card-icon">
+                <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" x2="12" y1="2" y2="12"></line></svg>
+            </div>
+            <h3>Circuit Breakers</h3>
+            <p>Automatically isolate unhealthy sources and prevent cascading failures across your infrastructure.</p>
+        </div>
+        <div class="l-card">
+            <div class="l-card-icon">
+                <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <h3>Resilient Pipelines</h3>
+            <p>Keep ingestion operational even when individual sources fail.<br/><br/>Retry &rarr; Recover &rarr; Continue</p>
+        </div>
+    </div>
+</section>
+
+<!-- OBSERVABILITY -->
+<section class="l-section container">
+    <div class="l-section-header">
+        <h2>Complete Visibility Into Your Pipeline</h2>
+        <p class="sub">Know which sources are healthy, what has been ingested, and where failures occur.</p>
+    </div>
+    <div class="l-obs-cols">
+        <div class="l-obs-panel">
+            <div class="l-obs-header">ACTIVE SOURCES</div>
+            <div class="l-obs-row">
+                <div>&#x25CF; arbeitnow</div>
+                <div class="l-obs-status green">HEALTHY</div>
+            </div>
+            <div class="l-obs-row">
+                <div>&#x25CF; remotive</div>
+                <div class="l-obs-status green">HEALTHY</div>
+            </div>
+            <div class="l-obs-row">
+                <div>&#x25CF; adzuna</div>
+                <div class="l-obs-status yellow">DEGRADED</div>
+            </div>
+            <div class="l-obs-row">
+                <div>&#x25CF; themuse</div>
+                <div class="l-obs-status green">HEALTHY</div>
+            </div>
+        </div>
+        <div class="l-obs-panel">
+            <div class="l-obs-header">INGESTED DATA</div>
+            <div class="l-obs-row">
+                <div style="font-weight:600;">Software Engineer</div>
+                <div style="color:var(--l-sec);">Anthropic</div>
+            </div>
+            <div class="l-obs-row">
+                <div style="font-weight:600;">Data Scientist</div>
+                <div style="color:var(--l-sec);">OpenAI</div>
+            </div>
+            <div class="l-obs-row">
+                <div style="font-weight:600;">Product Manager</div>
+                <div style="color:var(--l-sec);">Linear</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WHY INGESTPIPE? -->
+<section class="l-section container">
+    <div class="l-section-header">
+        <h2>Everything You Need to Operate Job Data at Scale</h2>
+    </div>
+    <div class="l-why-grid">
+        <div class="l-why-item">
+            <div class="l-why-num">01</div>
+            <h3 class="l-why-title">Multi-source ingestion</h3>
+            <p class="l-why-desc">Collect data from multiple job platforms through a unified pipeline.</p>
+        </div>
+        <div class="l-why-item">
+            <div class="l-why-num">02</div>
+            <h3 class="l-why-title">Normalized schema</h3>
+            <p class="l-why-desc">Convert inconsistent source formats into predictable structured data.</p>
+        </div>
+        <div class="l-why-item">
+            <div class="l-why-num">03</div>
+            <h3 class="l-why-title">Operational visibility</h3>
+            <p class="l-why-desc">Monitor source health and ingestion activity from one place.</p>
+        </div>
+        <div class="l-why-item">
+            <div class="l-why-num">04</div>
+            <h3 class="l-why-title">Reliable recovery</h3>
+            <p class="l-why-desc">Handle failures, retries, and degraded sources without stopping the pipeline.</p>
+        </div>
+    </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="l-cta">
+    <div class="container">
+        <h2 style="font-size: 3rem; margin-bottom: 1rem;">Ready to Explore Your<br/>Data Pipeline?</h2>
+        <p style="font-size: 1.25rem; margin-bottom: 2.5rem; color: var(--l-sec);">Monitor sources. Inspect data.<br/>Test resilience. Export.</p>
+        <div class="l-hero-actions">
+            <a class="btn-primary" href="/app">Open Dashboard</a>
+            <a class="btn-secondary" href="/docs">Read Documentation</a>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

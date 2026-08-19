@@ -1,289 +1,329 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 
 {% block title %}System Architecture - IngestPipe{% endblock %}
 
 {% block head %}
-<link href="/static/landing.css" rel="stylesheet"/>
+
 {% endblock %}
 
 {% block content %}
- 1. NAVBAR  2. SYSTEM HEADER <header class="s-header container">
-<div class="s-label">SYSTEM</div>
-<h1>The Engine Behind IngestPipe</h1>
-<p>A resilient data pipeline that collects job data from multiple sources, normalizes inconsistent formats, monitors source health, and delivers structured data through a unified interface.</p>
-<div class="s-header-actions">
-<a class="btn-primary" href="/app">Open Dashboard</a>
-<a class="btn-secondary" href="/docs">View Documentation</a>
-</div>
-</header> 3. SYSTEM STATUS BAR <div class="container">
-<div class="s-status-bar">
-<div class="s-status-top">
-<div style="display:flex; align-items:center; gap:0.5rem; color:var(--l-status);"><div class="dot" style="width:8px;height:8px;background:var(--l-status);border-radius:50%;"></div> SYSTEM OPERATIONAL</div>
-<div style="color:var(--l-sec);">Updated just now</div>
-</div>
-<div class="s-status-grid">
-<div class="s-status-item">
-<span class="name">Ingestion</span>
-<span class="state">● Operational</span>
-</div>
-<div class="s-status-item">
-<span class="name">Normalization</span>
-<span class="state">● Operational</span>
-</div>
-<div class="s-status-item">
-<span class="name">Monitoring</span>
-<span class="state">● Operational</span>
-</div>
-<div class="s-status-item">
-<span class="name">Export</span>
-<span class="state">● Operational</span>
-</div>
-</div>
-</div>
-</div> 4. PIPELINE ARCHITECTURE <section class="s-section container">
-<div class="s-section-header text-center">
-<h2>How IngestPipe Works</h2>
-<p style="margin:0 auto;">Raw job data enters through multiple sources, passes through the ingestion and normalization pipeline, and becomes structured data ready for search, monitoring, and export.</p>
-</div>
-<div class="s-pipe-col">
-<!-- Source -->
-<div class="s-pipe-card">
-<div class="s-pipe-num">01</div>
-<div class="s-pipe-title">JOB SOURCES <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div>
-<div class="s-pipe-desc">Collect raw job data from multiple external platforms.</div>
-<div class="s-pipe-status">● ACTIVE</div>
-<div class="s-pipe-detail">
-<div class="s-detail-row"><span class="lbl">arbeitnow</span><span class="val">Connected</span></div>
-<div class="s-detail-row"><span class="lbl">remotive</span><span class="val">Connected</span></div>
-<div class="s-detail-row"><span class="lbl">adzuna</span><span class="val">Connected</span></div>
-<div class="s-detail-row"><span class="lbl">themuse</span><span class="val">Connected</span></div>
-</div>
-</div>
-<div class="s-pipe-arrow">?</div>
-<!-- Ingest -->
-<div class="s-pipe-card">
-<div class="s-pipe-num">02</div>
-<div class="s-pipe-title">INGEST <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg></div>
-<div class="s-pipe-desc">Fetch and validate data concurrently across sources.</div>
-<div class="s-pipe-status">● ACTIVE</div>
-<div class="s-pipe-detail">
-<div class="s-detail-row"><span class="lbl">Current sources</span><span class="val">12</span></div>
-<div class="s-detail-row"><span class="lbl">Jobs processed</span><span class="val">2,491,302</span></div>
-<div class="s-detail-row"><span class="lbl">Avg processing</span><span class="val">170ms</span></div>
-</div>
-</div>
-<div class="s-pipe-arrow">?</div>
-<!-- Normalize -->
-<div class="s-pipe-card">
-<div class="s-pipe-num">03</div>
-<div class="s-pipe-title">NORMALIZE <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></div>
-<div class="s-pipe-desc">Map inconsistent source schemas into a unified format.</div>
-<div class="s-pipe-status">● ACTIVE</div>
-<div class="s-pipe-detail">
-<div style="font-family:monospace;">{ id, title, company, location, salary, source, date }</div>
-</div>
-</div>
-<div class="s-pipe-arrow">?</div>
-<!-- Monitor -->
-<div class="s-pipe-card">
-<div class="s-pipe-num">04</div>
-<div class="s-pipe-title">MONITOR <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
-<div class="s-pipe-desc">Track source health and ingestion activity in real-time.</div>
-<div class="s-pipe-status">● ACTIVE</div>
-<div class="s-pipe-detail">
-<div class="s-detail-row"><span class="lbl">Healthy</span><span class="val">10</span></div>
-<div class="s-detail-row"><span class="lbl">Degraded</span><span class="val">1</span></div>
-<div class="s-detail-row"><span class="lbl">Offline</span><span class="val">1</span></div>
-</div>
-</div>
-<div class="s-pipe-arrow">?</div>
-<!-- Output -->
-<div class="s-pipe-card">
-<div class="s-pipe-num">05</div>
-<div class="s-pipe-title">OUTPUT <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg></div>
-<div class="s-pipe-desc">Deliver structured data to frontend, API, or CSV/JSON.</div>
-<div class="s-pipe-status">● ACTIVE</div>
-</div>
-</div>
-</section> 5. SOURCE HEALTH <section class="s-section container">
-<div class="s-section-header">
-<h2>Source Health</h2>
-<p>Every external source is monitored independently so failures can be isolated without taking down the entire pipeline.</p>
-</div>
-<div class="s-status-grid" style="grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2rem; text-align: center;">
-<div style="border: 1px solid var(--l-border); padding: 1.5rem;">
-<div style="font-size: 2rem; font-weight: 700; font-family: monospace;">12</div>
-<div style="font-size: 0.85rem; color: var(--l-sec); font-weight: 600; text-transform: uppercase;">Active Sources</div>
-</div>
-<div style="border: 1px solid var(--l-border); padding: 1.5rem;">
-<div style="font-size: 2rem; font-weight: 700; font-family: monospace;">10</div>
-<div style="font-size: 0.85rem; color: var(--l-sec); font-weight: 600; text-transform: uppercase;">Healthy</div>
-</div>
-<div style="border: 1px solid var(--l-border); padding: 1.5rem;">
-<div style="font-size: 2rem; font-weight: 700; font-family: monospace;">99.9%</div>
-<div style="font-size: 0.85rem; color: var(--l-sec); font-weight: 600; text-transform: uppercase;">Health Score</div>
-</div>
-</div>
-<div class="s-table-wrapper" style="border: 1px solid var(--l-border);">
-<table class="s-table">
-<thead>
-<tr>
-<th>SOURCE</th>
-<th>STATUS</th>
-<th>LAST RUN</th>
-<th>JOBS</th>
-<th>LATENCY</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="font-weight: 600;">arbeitnow</td>
-<td><div class="s-status-badge green">● HEALTHY</div></td>
-<td>2 min ago</td>
-<td>84,291</td>
-<td>170ms</td>
-</tr>
-<tr>
-<td style="font-weight: 600;">remotive</td>
-<td><div class="s-status-badge green">● HEALTHY</div></td>
-<td>4 min ago</td>
-<td>51,203</td>
-<td>146ms</td>
-</tr>
-<tr>
-<td style="font-weight: 600;">adzuna</td>
-<td><div class="s-status-badge yellow">● DEGRADED</div></td>
-<td>8 min ago</td>
-<td>31,821</td>
-<td>502ms</td>
-</tr>
-<tr>
-<td style="font-weight: 600;">themuse</td>
-<td><div class="s-status-badge green">● HEALTHY</div></td>
-<td>3 min ago</td>
-<td>42,190</td>
-<td>180ms</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section> 6. INGESTION ACTIVITY <section class="s-section container">
-<div class="s-section-header">
-<h2>Ingestion Activity</h2>
-<p>Recent activity across the ingestion pipeline.</p>
-</div>
-<div class="s-timeline">
-<div class="s-timeline-item">
-<div class="s-timeline-dot"></div>
-<div class="s-timeline-time">09:46:27</div>
-<div class="s-timeline-status green">● SUCCESS</div>
-<div class="s-timeline-body">Scraped <span style="font-weight: 700;">remotive</span><br/>17 new, 17 updated</div>
-<div class="s-timeline-meta">170ms</div>
-</div>
-<div class="s-timeline-item">
-<div class="s-timeline-dot"></div>
-<div class="s-timeline-time">09:22:29</div>
-<div class="s-timeline-status green">● SUCCESS</div>
-<div class="s-timeline-body">Scraped <span style="font-weight: 700;">arbeitnow</span><br/>0 new, 17 updated</div>
-<div class="s-timeline-meta">170ms</div>
-</div>
-<div class="s-timeline-item">
-<div class="s-timeline-dot"></div>
-<div class="s-timeline-time">09:10:41</div>
-<div class="s-timeline-status yellow">● WARNING</div>
-<div class="s-timeline-body"><span style="font-weight: 700;">adzuna</span> returned HTTP 429<br/>Retry scheduled</div>
-</div>
-</div>
-</section> 7. FAILURE & RECOVERY & CHAOS <section class="s-section container">
-<div class="s-section-header text-center">
-<h2>Built to Recover</h2>
-<p style="margin: 0 auto;">Individual source failures should not become system-wide failures.</p>
-</div>
-<div class="s-flow">
-<div class="s-flow-node">
-<div class="s-pipe-num">01</div>
-<h3 style="margin-bottom:1rem; font-size:1.1rem;">DETECT</h3>
-<p style="font-size:0.9rem; color:var(--l-sec);">Source returns:<br/>502 / 429 / timeout<br/><br/>System marks source<br/>as degraded.</p>
-</div>
-<div class="s-flow-arrow">?</div>
-<div class="s-flow-node">
-<div class="s-pipe-num">02</div>
-<h3 style="margin-bottom:1rem; font-size:1.1rem;">ISOLATE</h3>
-<p style="font-size:0.9rem; color:var(--l-sec);">Circuit breaker prevents<br/>repeated requests to the<br/>unhealthy source.</p>
-</div>
-<div class="s-flow-arrow">?</div>
-<div class="s-flow-node">
-<div class="s-pipe-num">03</div>
-<h3 style="margin-bottom:1rem; font-size:1.1rem;">RECOVER</h3>
-<p style="font-size:0.9rem; color:var(--l-sec);">Retry with controlled<br/>backoff and resume<br/>normal ingestion.</p>
-</div>
-</div>
-<div class="s-chaos-card">
-<h3 style="margin-bottom: 0.5rem; text-transform: uppercase;">Chaos Engineering</h3>
-<p>Test how your pipeline behaves when sources fail.</p>
-<div class="s-chaos-buttons">
-<div class="s-chaos-btn">502</div>
-<div class="s-chaos-btn">429</div>
-<div class="s-chaos-btn">LATENCY</div>
-</div>
-<p style="margin-bottom: 2rem;">Inject controlled failures into the sandbox and observe recovery behavior.</p>
-<a class="btn-primary" href="/app">Open Chaos Control</a>
-</div>
-</section> 8. DATA OUTPUT <section class="s-section container">
-<div class="s-section-header text-center">
-<h2>From Raw Data to Usable Data</h2>
-</div>
-<div style="text-align: center; margin-bottom: 2rem; font-family: monospace; font-weight: 700; font-size: 1.1rem;">
-<div>RAW SOURCES</div>
-<div style="margin: 0.5rem 0;">?</div>
-<div>INGESTPIPE</div>
-<div style="margin: 0.5rem 0;">?</div>
-<div>NORMALIZED DATA</div>
-<div style="margin: 0.5rem 0;">?</div>
-</div>
-<div class="s-flow" style="align-items: stretch;">
-<div class="s-flow-node">
-<h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Dashboard</h3>
-<p style="font-size: 0.9rem; color: var(--l-sec);">Monitor and inspect normalized job data visually.</p>
-</div>
-<div class="s-flow-node">
-<h3 style="margin-bottom: 1rem; font-size: 1.1rem;">API</h3>
-<p style="font-size: 0.9rem; color: var(--l-sec);">Access structured job data programmatically.</p>
-</div>
-<div class="s-flow-node">
-<h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Export</h3>
-<p style="font-size: 0.9rem; color: var(--l-sec);">Download normalized datasets as JSON or CSV.</p>
-</div>
-</div>
-</section> 9. METRICS <section class="s-section container">
-<div class="s-section-header text-center">
-<h2>Pipeline at a Glance</h2>
-</div>
-<div class="l-metrics" style="margin-top: 3rem;">
-<div>
-<div class="l-metric-val">2,491,302</div>
-<div class="l-metric-label">Jobs Ingested</div>
-</div>
-<div>
-<div class="l-metric-val">12</div>
-<div class="l-metric-label">Active Sources</div>
-</div>
-<div>
-<div class="l-metric-val">99.9%</div>
-<div class="l-metric-label">Health Score</div>
-</div>
-<div>
-<div class="l-metric-val" style="font-size: 2.2rem;">170ms</div>
-<div class="l-metric-label">Avg. Ingestion</div>
-</div>
-</div>
-</section> 10. CTA & FOOTER <section class="l-cta">
+
+<!-- SYSTEM HEADER -->
+<header class="s-header container">
+    <div class="s-label">SYSTEM</div>
+    <h1>The Engine Behind IngestPipe</h1>
+    <p>A resilient data pipeline that collects job data from multiple sources, normalizes inconsistent formats, monitors source health, and delivers structured data through a unified interface.</p>
+    <div class="s-header-actions">
+        <a class="btn-primary" href="/app">Open Dashboard</a>
+        <a class="btn-secondary" href="/docs">View Documentation</a>
+    </div>
+</header>
+
+<!-- SYSTEM STATUS BAR -->
 <div class="container">
-<h2 style="font-size: 3rem; margin-bottom: 1rem;">Ready to Explore the System?</h2>
-<p style="font-size: 1.25rem; margin-bottom: 2.5rem; color: var(--l-sec);">Monitor your pipeline from one command center.</p>
-<div class="l-hero-actions">
-<a class="btn-primary" href="/app">Open Dashboard</a>
+    <div class="s-status-bar">
+        <div class="s-status-top">
+            <div style="display:flex; align-items:center; gap:0.5rem; color:var(--l-status);">
+                <div class="dot" style="width:8px;height:8px;background:var(--l-status);border-radius:50%;"></div>
+                SYSTEM OPERATIONAL
+            </div>
+            <div style="color:var(--l-sec);">Updated just now</div>
+        </div>
+        <div class="s-status-grid">
+            <div class="s-status-item">
+                <span class="name">Ingestion</span>
+                <span class="state">&#x25CF; Operational</span>
+            </div>
+            <div class="s-status-item">
+                <span class="name">Normalization</span>
+                <span class="state">&#x25CF; Operational</span>
+            </div>
+            <div class="s-status-item">
+                <span class="name">Monitoring</span>
+                <span class="state">&#x25CF; Operational</span>
+            </div>
+            <div class="s-status-item">
+                <span class="name">Export</span>
+                <span class="state">&#x25CF; Operational</span>
+            </div>
+        </div>
+    </div>
 </div>
-</div>
+
+<!-- PIPELINE ARCHITECTURE -->
+<section class="s-section container">
+    <div class="s-section-header text-center">
+        <h2>How IngestPipe Works</h2>
+        <p style="margin:0 auto;">Raw job data enters through multiple sources, passes through the ingestion and normalization pipeline, and becomes structured data ready for search, monitoring, and export.</p>
+    </div>
+    <div class="s-pipe-col">
+        <!-- Source -->
+        <div class="s-pipe-card">
+            <div class="s-pipe-num">01</div>
+            <div class="s-pipe-title">JOB SOURCES
+                <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            </div>
+            <div class="s-pipe-desc">Collect raw job data from multiple external platforms.</div>
+            <div class="s-pipe-status">&#x25CF; ACTIVE</div>
+            <div class="s-pipe-detail">
+                <div class="s-detail-row"><span class="lbl">arbeitnow</span><span class="val">Connected</span></div>
+                <div class="s-detail-row"><span class="lbl">remotive</span><span class="val">Connected</span></div>
+                <div class="s-detail-row"><span class="lbl">adzuna</span><span class="val">Connected</span></div>
+                <div class="s-detail-row"><span class="lbl">themuse</span><span class="val">Connected</span></div>
+            </div>
+        </div>
+        <div class="s-pipe-arrow">&darr;</div>
+        <!-- Ingest -->
+        <div class="s-pipe-card">
+            <div class="s-pipe-num">02</div>
+            <div class="s-pipe-title">INGEST
+                <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+            </div>
+            <div class="s-pipe-desc">Fetch and validate data concurrently across sources.</div>
+            <div class="s-pipe-status">&#x25CF; ACTIVE</div>
+            <div class="s-pipe-detail">
+                <div class="s-detail-row"><span class="lbl">Current sources</span><span class="val">12</span></div>
+                <div class="s-detail-row"><span class="lbl">Jobs processed</span><span class="val">2,491,302</span></div>
+                <div class="s-detail-row"><span class="lbl">Avg processing</span><span class="val">170ms</span></div>
+            </div>
+        </div>
+        <div class="s-pipe-arrow">&darr;</div>
+        <!-- Normalize -->
+        <div class="s-pipe-card">
+            <div class="s-pipe-num">03</div>
+            <div class="s-pipe-title">NORMALIZE
+                <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </div>
+            <div class="s-pipe-desc">Map inconsistent source schemas into a unified format.</div>
+            <div class="s-pipe-status">&#x25CF; ACTIVE</div>
+            <div class="s-pipe-detail">
+                <div style="font-family:monospace;">{ id, title, company, location, salary, source, date }</div>
+            </div>
+        </div>
+        <div class="s-pipe-arrow">&darr;</div>
+        <!-- Monitor -->
+        <div class="s-pipe-card">
+            <div class="s-pipe-num">04</div>
+            <div class="s-pipe-title">MONITOR
+                <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+            <div class="s-pipe-desc">Track source health and ingestion activity in real-time.</div>
+            <div class="s-pipe-status">&#x25CF; ACTIVE</div>
+            <div class="s-pipe-detail">
+                <div class="s-detail-row"><span class="lbl">Healthy</span><span class="val">10</span></div>
+                <div class="s-detail-row"><span class="lbl">Degraded</span><span class="val">1</span></div>
+                <div class="s-detail-row"><span class="lbl">Offline</span><span class="val">1</span></div>
+            </div>
+        </div>
+        <div class="s-pipe-arrow">&darr;</div>
+        <!-- Output -->
+        <div class="s-pipe-card">
+            <div class="s-pipe-num">05</div>
+            <div class="s-pipe-title">OUTPUT
+                <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="20"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>
+            </div>
+            <div class="s-pipe-desc">Deliver structured data to frontend, API, or CSV/JSON.</div>
+            <div class="s-pipe-status">&#x25CF; ACTIVE</div>
+        </div>
+    </div>
 </section>
+
+<!-- SOURCE HEALTH -->
+<section class="s-section container">
+    <div class="s-section-header">
+        <h2>Source Health</h2>
+        <p>Every external source is monitored independently so failures can be isolated without taking down the entire pipeline.</p>
+    </div>
+    <div class="s-status-grid" style="grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2rem; text-align: center;">
+        <div style="border: 1px solid var(--l-border); padding: 1.5rem;">
+            <div style="font-size: 2rem; font-weight: 700; font-family: monospace;">12</div>
+            <div style="font-size: 0.85rem; color: var(--l-sec); font-weight: 600; text-transform: uppercase;">Active Sources</div>
+        </div>
+        <div style="border: 1px solid var(--l-border); padding: 1.5rem;">
+            <div style="font-size: 2rem; font-weight: 700; font-family: monospace;">10</div>
+            <div style="font-size: 0.85rem; color: var(--l-sec); font-weight: 600; text-transform: uppercase;">Healthy</div>
+        </div>
+        <div style="border: 1px solid var(--l-border); padding: 1.5rem;">
+            <div style="font-size: 2rem; font-weight: 700; font-family: monospace;">99.9%</div>
+            <div style="font-size: 0.85rem; color: var(--l-sec); font-weight: 600; text-transform: uppercase;">Health Score</div>
+        </div>
+    </div>
+    <div class="s-table-wrapper" style="border: 1px solid var(--l-border);">
+        <table class="s-table">
+            <thead>
+                <tr>
+                    <th>SOURCE</th>
+                    <th>STATUS</th>
+                    <th>LAST RUN</th>
+                    <th>JOBS</th>
+                    <th>LATENCY</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight: 600;">arbeitnow</td>
+                    <td><div class="s-status-badge green">&#x25CF; HEALTHY</div></td>
+                    <td>2 min ago</td>
+                    <td>84,291</td>
+                    <td>170ms</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600;">remotive</td>
+                    <td><div class="s-status-badge green">&#x25CF; HEALTHY</div></td>
+                    <td>4 min ago</td>
+                    <td>51,203</td>
+                    <td>146ms</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600;">adzuna</td>
+                    <td><div class="s-status-badge yellow">&#x25CF; DEGRADED</div></td>
+                    <td>8 min ago</td>
+                    <td>31,821</td>
+                    <td>502ms</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 600;">themuse</td>
+                    <td><div class="s-status-badge green">&#x25CF; HEALTHY</div></td>
+                    <td>3 min ago</td>
+                    <td>42,190</td>
+                    <td>180ms</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- INGESTION ACTIVITY -->
+<section class="s-section container">
+    <div class="s-section-header">
+        <h2>Ingestion Activity</h2>
+        <p>Recent activity across the ingestion pipeline.</p>
+    </div>
+    <div class="s-timeline">
+        <div class="s-timeline-item">
+            <div class="s-timeline-dot"></div>
+            <div class="s-timeline-time">09:46:27</div>
+            <div class="s-timeline-status green">&#x25CF; SUCCESS</div>
+            <div class="s-timeline-body">Scraped <span style="font-weight: 700;">remotive</span><br/>17 new, 17 updated</div>
+            <div class="s-timeline-meta">170ms</div>
+        </div>
+        <div class="s-timeline-item">
+            <div class="s-timeline-dot"></div>
+            <div class="s-timeline-time">09:22:29</div>
+            <div class="s-timeline-status green">&#x25CF; SUCCESS</div>
+            <div class="s-timeline-body">Scraped <span style="font-weight: 700;">arbeitnow</span><br/>0 new, 17 updated</div>
+            <div class="s-timeline-meta">170ms</div>
+        </div>
+        <div class="s-timeline-item">
+            <div class="s-timeline-dot"></div>
+            <div class="s-timeline-time">09:10:41</div>
+            <div class="s-timeline-status yellow">&#x25CF; WARNING</div>
+            <div class="s-timeline-body"><span style="font-weight: 700;">adzuna</span> returned HTTP 429<br/>Retry scheduled</div>
+        </div>
+    </div>
+</section>
+
+<!-- FAILURE & RECOVERY & CHAOS -->
+<section class="s-section container">
+    <div class="s-section-header text-center">
+        <h2>Built to Recover</h2>
+        <p style="margin: 0 auto;">Individual source failures should not become system-wide failures.</p>
+    </div>
+    <div class="s-flow">
+        <div class="s-flow-node">
+            <div class="s-pipe-num">01</div>
+            <h3 style="margin-bottom:1rem; font-size:1.1rem;">DETECT</h3>
+            <p style="font-size:0.9rem; color:var(--l-sec);">Source returns:<br/>502 / 429 / timeout<br/><br/>System marks source<br/>as degraded.</p>
+        </div>
+        <div class="s-flow-arrow">&rarr;</div>
+        <div class="s-flow-node">
+            <div class="s-pipe-num">02</div>
+            <h3 style="margin-bottom:1rem; font-size:1.1rem;">ISOLATE</h3>
+            <p style="font-size:0.9rem; color:var(--l-sec);">Circuit breaker prevents<br/>repeated requests to the<br/>unhealthy source.</p>
+        </div>
+        <div class="s-flow-arrow">&rarr;</div>
+        <div class="s-flow-node">
+            <div class="s-pipe-num">03</div>
+            <h3 style="margin-bottom:1rem; font-size:1.1rem;">RECOVER</h3>
+            <p style="font-size:0.9rem; color:var(--l-sec);">Retry with controlled<br/>backoff and resume<br/>normal ingestion.</p>
+        </div>
+    </div>
+    <div class="s-chaos-card">
+        <h3 style="margin-bottom: 0.5rem; text-transform: uppercase;">Chaos Engineering</h3>
+        <p>Test how your pipeline behaves when sources fail.</p>
+        <div class="s-chaos-buttons">
+            <div class="s-chaos-btn">502</div>
+            <div class="s-chaos-btn">429</div>
+            <div class="s-chaos-btn">LATENCY</div>
+        </div>
+        <p style="margin-bottom: 2rem;">Inject controlled failures into the sandbox and observe recovery behavior.</p>
+        <a class="btn-primary" href="/app">Open Chaos Control</a>
+    </div>
+</section>
+
+<!-- DATA OUTPUT -->
+<section class="s-section container">
+    <div class="s-section-header text-center">
+        <h2>From Raw Data to Usable Data</h2>
+    </div>
+    <div style="text-align: center; margin-bottom: 2rem; font-family: monospace; font-weight: 700; font-size: 1.1rem;">
+        <div>RAW SOURCES</div>
+        <div style="margin: 0.5rem 0;">&darr;</div>
+        <div>INGESTPIPE</div>
+        <div style="margin: 0.5rem 0;">&darr;</div>
+        <div>NORMALIZED DATA</div>
+        <div style="margin: 0.5rem 0;">&darr;</div>
+    </div>
+    <div class="s-flow" style="align-items: stretch;">
+        <div class="s-flow-node">
+            <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Dashboard</h3>
+            <p style="font-size: 0.9rem; color: var(--l-sec);">Monitor and inspect normalized job data visually.</p>
+        </div>
+        <div class="s-flow-node">
+            <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">API</h3>
+            <p style="font-size: 0.9rem; color: var(--l-sec);">Access structured job data programmatically.</p>
+        </div>
+        <div class="s-flow-node">
+            <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Export</h3>
+            <p style="font-size: 0.9rem; color: var(--l-sec);">Download normalized datasets as JSON or CSV.</p>
+        </div>
+    </div>
+</section>
+
+<!-- METRICS -->
+<section class="s-section container">
+    <div class="s-section-header text-center">
+        <h2>Pipeline at a Glance</h2>
+    </div>
+    <div class="l-metrics" style="margin-top: 3rem;">
+        <div>
+            <div class="l-metric-val">2,491,302</div>
+            <div class="l-metric-label">Jobs Ingested</div>
+        </div>
+        <div>
+            <div class="l-metric-val">12</div>
+            <div class="l-metric-label">Active Sources</div>
+        </div>
+        <div>
+            <div class="l-metric-val">99.9%</div>
+            <div class="l-metric-label">Health Score</div>
+        </div>
+        <div>
+            <div class="l-metric-val" style="font-size: 2.2rem;">170ms</div>
+            <div class="l-metric-label">Avg. Ingestion</div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="l-cta">
+    <div class="container">
+        <h2 style="font-size: 3rem; margin-bottom: 1rem;">Ready to Explore the System?</h2>
+        <p style="font-size: 1.25rem; margin-bottom: 2.5rem; color: var(--l-sec);">Monitor your pipeline from one command center.</p>
+        <div class="l-hero-actions">
+            <a class="btn-primary" href="/app">Open Dashboard</a>
+        </div>
+    </div>
+</section>
+
 {% endblock %}
