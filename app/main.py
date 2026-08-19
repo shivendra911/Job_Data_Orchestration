@@ -94,6 +94,10 @@ def create_app() -> FastAPI:
     async def root():
         return FileResponse("static/landing.html")
 
+    @app.get("/search", include_in_schema=False)
+    async def search():
+        return FileResponse("static/search.html")
+
     @app.get("/pricing", include_in_schema=False)
     async def pricing():
         return FileResponse("static/pricing.html")
