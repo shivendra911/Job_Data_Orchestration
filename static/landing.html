@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingestion Pipeline - Data Orchestration</title>
+    <title>IngestPipe - Data Orchestration</title>
     <link rel="stylesheet" href="/static/site.css">
     <script>
-        // Init Theme from LocalStorage
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'brutalist') {
             document.documentElement.setAttribute('data-theme', 'brutalist');
@@ -20,42 +19,274 @@
             IngestPipe
         </a>
         <div class="site-nav-links">
+            <a href="/" class="active">Home</a>
             <a href="/search">Find Jobs</a>
             <a href="/pricing">Pricing</a>
-            <a href="/docs">Documentation</a>
-            <a href="/app" class="btn-primary">Dashboard</a>
+            <a href="/docs">Docs</a>
+            <a href="/app" class="btn-primary">Launch Dashboard</a>
         </div>
     </nav>
 
-    <main class="container">
-        <section class="hero">
-            <h1>Industrial-Grade Job Data Orchestration</h1>
-            <p>A strictly-engineered pipeline for ingesting, normalizing, and syndicating job board data. Built for scale, resilience, and maximum throughput.</p>
-            <div class="hero-actions">
-                <a href="/app" class="btn-primary">Launch Dashboard</a>
-                <a href="/docs" class="btn-secondary">Read Docs</a>
+    <main>
+        <!-- 2. Hero Section -->
+        <section class="landing-section hero-section text-center">
+            <div class="container">
+                <div class="system-status">
+                    <span class="status-dot"></span> SYSTEM OPERATIONAL
+                </div>
+                <h1 class="hero-title" style="margin-top: 1.5rem; font-size: 3.5rem; max-width: 800px; margin-inline: auto;">Industrial-Grade Job Data Orchestration</h1>
+                <p class="hero-subtitle" style="font-size: 1.25rem; max-width: 600px; margin: 1.5rem auto 2.5rem auto; color: var(--text-muted);">
+                    Ingest, normalize, monitor, and export job data through a resilient data pipeline built for scale.
+                </p>
+                <div class="hero-actions" style="justify-content: center;">
+                    <a href="/app" class="btn-primary" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">Launch Dashboard</a>
+                    <a href="/docs" class="btn-secondary" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">Read Documentation</a>
+                </div>
+                
+                <div class="hero-visual" style="margin-top: 4rem;">
+                    <div class="pipeline-viz">
+                        <div class="pl-node">Raw Data</div>
+                        <div class="pl-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+                        <div class="pl-node highlight">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            IngestPipe Engine
+                        </div>
+                        <div class="pl-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+                        <div class="pl-node">Normalized API</div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="grid">
-            <div class="card">
-                <h3>Chaos Engineering</h3>
-                <p>Test your downstream services with our built-in Sandbox. Inject synthetic 502s, rate limits, and latency spikes with a single click.</p>
-            </div>
-            <div class="card">
-                <h3>Circuit Breakers</h3>
-                <p>Automatic failure isolation. If a source goes down, our resilience layer trips the breaker, preventing cascading failures across your infrastructure.</p>
-            </div>
-            <div class="card">
-                <h3>Instant Export</h3>
-                <p>Dump millions of normalized records instantly. Export to JSON or CSV via optimized streaming endpoints right from your command center.</p>
+        <!-- 3. Dashboard Preview -->
+        <section class="landing-section dashboard-preview-section">
+            <div class="container text-center">
+                <h2 class="section-title">One Command Center for Your Job Data</h2>
+                <div class="dashboard-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                        <div class="mockup-title">IngestPipe Dashboard - /app</div>
+                    </div>
+                    <div class="mockup-body">
+                        <div class="mockup-sidebar">
+                            <div class="mock-nav">Active Sources</div>
+                            <div class="mock-nav">Source Health</div>
+                            <div class="mock-nav">Ingestion Activity</div>
+                            <div class="mock-nav">Remote Filtering</div>
+                        </div>
+                        <div class="mockup-content">
+                            <div class="mock-stats">
+                                <div class="mock-stat-box">
+                                    <div class="mock-stat-title">Ingested Jobs</div>
+                                    <div class="mock-stat-value">2,491,302</div>
+                                </div>
+                                <div class="mock-stat-box">
+                                    <div class="mock-stat-title">Active Sources</div>
+                                    <div class="mock-stat-value">12</div>
+                                </div>
+                                <div class="mock-stat-box">
+                                    <div class="mock-stat-title">Health Score</div>
+                                    <div class="mock-stat-value" style="color: #10b981;">99.9%</div>
+                                </div>
+                            </div>
+                            <div class="mock-chart">
+                                <div class="mock-chart-bar" style="height: 40%"></div>
+                                <div class="mock-chart-bar" style="height: 60%"></div>
+                                <div class="mock-chart-bar" style="height: 80%"></div>
+                                <div class="mock-chart-bar" style="height: 100%"></div>
+                                <div class="mock-chart-bar" style="height: 70%"></div>
+                                <div class="mock-chart-bar" style="height: 90%"></div>
+                            </div>
+                            <div class="mock-actions">
+                                <div class="mock-btn">Export CSV</div>
+                                <div class="mock-btn">Export JSON</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
+
+        <!-- 4. How IngestPipe Works -->
+        <section class="landing-section how-it-works-section">
+            <div class="container text-center">
+                <h2 class="section-title">From Source to Structured Data</h2>
+                
+                <div class="process-pipeline">
+                    <div class="process-step">
+                        <div class="step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        </div>
+                        <h4>JOB SOURCES</h4>
+                        <p>Raw internet data.</p>
+                    </div>
+                    <div class="process-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+                    <div class="process-step">
+                        <div class="step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        </div>
+                        <h4>INGEST</h4>
+                        <p>Collect job data from multiple sources.</p>
+                    </div>
+                    <div class="process-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+                    <div class="process-step highlight-step">
+                        <div class="step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        </div>
+                        <h4>NORMALIZE</h4>
+                        <p>Convert different source formats into a consistent schema.</p>
+                    </div>
+                    <div class="process-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+                    <div class="process-step">
+                        <div class="step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        </div>
+                        <h4>MONITOR</h4>
+                        <p>Track source health and ingestion activity.</p>
+                    </div>
+                    <div class="process-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+                    <div class="process-step">
+                        <div class="step-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        </div>
+                        <h4>EXPORT</h4>
+                        <p>Access normalized data through JSON or CSV.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Engineering / Reliability -->
+        <section class="landing-section engineering-section">
+            <div class="container text-center">
+                <h2 class="section-title">Built for Failure</h2>
+                <div class="grid grid-3">
+                    <div class="card text-left">
+                        <h3>Chaos Engineering</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 1rem;">Simulate:</p>
+                        <div class="tag-row" style="margin-bottom: 1rem;">
+                            <span class="tag tag-red">502</span>
+                            <span class="tag tag-yellow">429</span>
+                            <span class="tag tag-orange">Latency</span>
+                        </div>
+                        <p style="font-size: 0.95rem; color: var(--text-main);">Test your downstream services with our built-in Sandbox. Inject synthetic network failures to test system resilience.</p>
+                    </div>
+                    <div class="card text-left">
+                        <h3>Circuit Breakers</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-main)" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
+                        </div>
+                        <p style="font-size: 0.95rem; color: var(--text-main);">Automatically isolate unhealthy sources and prevent cascading failures across your infrastructure.</p>
+                    </div>
+                    <div class="card text-left">
+                        <h3>Resilient Pipelines</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-main)" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        </div>
+                        <p style="font-size: 0.95rem; color: var(--text-main);">Keep ingestion operational even when individual sources fail. Our pipeline automatically retries and recovers.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Source Monitoring + Data -->
+        <section class="landing-section monitoring-section">
+            <div class="container text-center">
+                <h2 class="section-title">Complete Visibility Into Your Pipeline</h2>
+                <div class="grid split-2" style="margin-top: 3rem;">
+                    
+                    <div class="mock-panel text-left">
+                        <div class="mock-panel-header">ACTIVE SOURCES</div>
+                        <div class="mock-panel-body">
+                            <div class="source-item">
+                                <span style="font-weight: 500;">arbeitnow</span>
+                                <span class="status-pill healthy">? HEALTHY</span>
+                            </div>
+                            <div class="source-item">
+                                <span style="font-weight: 500;">remotive</span>
+                                <span class="status-pill healthy">? HEALTHY</span>
+                            </div>
+                            <div class="source-item">
+                                <span style="font-weight: 500;">adzuna</span>
+                                <span class="status-pill warning">? DEGRADED</span>
+                            </div>
+                            <div class="source-item">
+                                <span style="font-weight: 500;">themuse</span>
+                                <span class="status-pill healthy">? HEALTHY</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mock-panel text-left">
+                        <div class="mock-panel-header">INGESTED DATA</div>
+                        <div class="mock-panel-body" style="padding: 0; overflow-x: auto;">
+                            <table class="mock-table">
+                                <thead>
+                                    <tr>
+                                        <th>Role</th>
+                                        <th>Company</th>
+                                        <th>Source</th>
+                                        <th>Posted</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Software Engineer</td>
+                                        <td>Anthropic</td>
+                                        <td>arbeitnow</td>
+                                        <td>8/19/26</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Data Scientist</td>
+                                        <td>OpenAI</td>
+                                        <td>remotive</td>
+                                        <td>8/19/26</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Product Manager</td>
+                                        <td>Linear</td>
+                                        <td>arbeitnow</td>
+                                        <td>8/18/26</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Final CTA + Footer -->
+        <section class="landing-section cta-section text-center">
+            <div class="container">
+                <h2 class="section-title">Ready to Explore Your Data Pipeline?</h2>
+                <div class="hero-actions" style="justify-content: center; margin-top: 2rem;">
+                    <a href="/app" class="btn-primary" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">Launch Dashboard</a>
+                    <a href="/docs" class="btn-secondary" style="font-size: 1.1rem; padding: 0.8rem 1.5rem;">Read Documentation</a>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 Ingestion Pipeline Systems. Built for engineering precision.</p>
+    <footer class="site-footer" style="padding: 4rem 0 2rem 0; border-top: 1px solid var(--border-subtle); background-color: var(--bg-main);">
+        <div class="container text-center">
+            <div style="font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem; color: var(--text-main);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                IngestPipe
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Data Orchestration & Sync</p>
+            
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; font-size: 0.95rem;">
+                <a href="/search" style="color: var(--text-main); text-decoration: none;">Find Jobs</a>
+                <span style="color: var(--border-subtle);">&#183;</span>
+                <a href="/pricing" style="color: var(--text-main); text-decoration: none;">Pricing</a>
+                <span style="color: var(--border-subtle);">&#183;</span>
+                <a href="/docs" style="color: var(--text-main); text-decoration: none;">Documentation</a>
+            </div>
+            
+            <p style="color: var(--text-muted); font-size: 0.85rem;">&copy; 2026 Ingestion Pipeline Systems</p>
         </div>
     </footer>
 </body>
