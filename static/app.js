@@ -20,35 +20,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const pageIndicator = document.getElementById('page-indicator');
     const btnChaosTrigger = document.getElementById('btn-chaos-trigger');
     const btnChaosSpike = document.getElementById('btn-chaos-spike');
-    const themeToggle = document.getElementById('theme-toggle');
-    const exportCsvBtn = document.getElementById('btn-export-csv');
+        const exportCsvBtn = document.getElementById('btn-export-csv');
     const exportJsonBtn = document.getElementById('btn-export-json');
 
-    // Init Theme from LocalStorage
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'brutalist') {
-        document.body.setAttribute('data-theme', 'brutalist');
-        if (themeToggle) themeToggle.checked = true;
-    }
-
+    
     // Initial fetch
     fetchSources();
     fetchLogs();
     fetchJobs();
 
     // Event Listeners
-    if (themeToggle) {
-        themeToggle.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                document.body.setAttribute('data-theme', 'brutalist');
-                localStorage.setItem('theme', 'brutalist');
-            } else {
-                document.body.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'premium');
-            }
-        });
-    }
-
+    
     refreshBtn.addEventListener('click', fetchSources);
     
     remoteToggle.addEventListener('change', (e) => {
@@ -142,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderLogs(data);
         } catch (error) {
             console.error('Error fetching logs:', error);
-            activityLogList.innerHTML = '<div style="color: var(--status-error); padding: 1rem;">Failed to load logs.</div>';
+            activityLogList.innerHTML = '<div style="color: #ff0000; padding: 1rem;">Failed to load logs.</div>';
         }
     }
 
@@ -151,29 +133,29 @@ document.addEventListener('DOMContentLoaded', () => {
         activityLogList.innerHTML = '';
         
         if (logs.length === 0) {
-            activityLogList.innerHTML = '<div style="padding: 1rem; color: var(--text-muted);">No activity recorded yet.</div>';
+            activityLogList.innerHTML = '<div style="padding: 1rem; color: var(--l-sec);">No activity recorded yet.</div>';
             return;
         }
 
         logs.forEach(log => {
             const div = document.createElement('div');
             div.style.padding = '0.75rem';
-            div.style.borderBottom = '1px solid var(--border-subtle)';
+            div.style.borderBottom = '1px solid var(--l-border)';
             
             const time = new Date(log.started_at).toLocaleTimeString();
-            let statusColor = log.status === 'success' ? 'var(--status-success)' : 'var(--status-error)';
+            let statusColor = log.status === 'success' ? '#008800' : '#ff0000';
             
             div.innerHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
                     <strong style="color: ${statusColor};">[${log.status.toUpperCase()}]</strong>
-                    <span style="color: var(--text-muted);">${time}</span>
+                    <span style="color: var(--l-sec);">${time}</span>
                 </div>
                 <div>
                     Scraped <strong>${log.source_name}</strong> - 
                     ${log.jobs_new} new, ${log.jobs_updated} updated. 
-                    <span style="color: var(--text-muted); margin-left: 0.5rem;">(${log.duration_ms}ms)</span>
+                    <span style="color: var(--l-sec); margin-left: 0.5rem;">(${log.duration_ms}ms)</span>
                 </div>
-                ${log.error_message ? `<div style="color: var(--status-error); margin-top: 0.5rem;">${log.error_message}</div>` : ''}
+                ${log.error_message ? `<div style="color: #ff0000; margin-top: 0.5rem;">${log.error_message}</div>` : ''}
             `;
             activityLogList.appendChild(div);
         });
@@ -199,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updatePagination(data.length);
         } catch (error) {
             console.error('Error:', error);
-            jobsTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--status-error);">Failed to load jobs</td></tr>';
+            jobsTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ff0000;">Failed to load jobs</td></tr>';
         } finally {
             state.isLoadingJobs = false;
         }
@@ -225,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Show temporary success state
             btn.textContent = 'Success!';
-            btn.style.backgroundColor = 'var(--status-success)';
+            btn.style.backgroundColor = '#008800';
             btn.style.color = '#fff';
             setTimeout(() => {
                 btn.disabled = false;
@@ -237,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error:', error);
             btn.textContent = 'Failed';
-            btn.style.backgroundColor = 'var(--status-error)';
+            btn.style.backgroundColor = '#ff0000';
             btn.style.color = '#fff';
             setTimeout(() => {
                 btn.disabled = false;

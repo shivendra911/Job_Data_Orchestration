@@ -3,37 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingest Pipeline</title>
+    <title>Dashboard - IngestPipe</title>
+    <link rel="stylesheet" href="/static/landing.css">
     <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
+<body class="landing">
     
-    <div class="app-container">
-        <header class="main-header">
-            <div class="logo">
-                <h1>Ingestion Pipeline</h1>
-                <p>Data Orchestration & Sync</p>
+    <!-- 1. NAVBAR -->
+    <nav class="l-nav">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="/" class="l-nav-brand">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                IngestPipe
+            </a>
+            <div class="l-nav-links">
+                <a href="/">Home</a>
+                <a href="/search">Find Jobs</a>
+                <a href="/system">System</a>
+                <a href="/docs">Docs</a>
+                <a href="/app" class="active" style="background: rgba(0,0,0,0.05); padding: 0.25rem 0.5rem; border-radius: 4px;">Dashboard</a>
             </div>
-            <div class="header-right" style="display: flex; align-items: center; gap: 1.5rem;">
-                <nav style="display: flex; gap: 1.5rem;">
-                    <a href="/" style="color: var(--text-muted); font-size: 0.9rem; text-decoration: none;">Home</a>
-                    <a href="/search" style="color: var(--text-muted); font-size: 0.9rem; text-decoration: none;">Find Jobs</a>
-                    <a href="/system" style="color: var(--text-muted); font-size: 0.9rem; text-decoration: none;">System</a>
-                    <a href="/docs" style="color: var(--text-muted); font-size: 0.9rem; text-decoration: none;">Docs</a>
-                </nav>
-                <div style="width: 1px; height: 24px; background: var(--border-subtle);"></div>
-                <div class="theme-switcher">
-                    <span>Premium Dark</span>
-                    <label class="toggle" title="Toggle Brutalist Theme">
-                        <input type="checkbox" id="theme-toggle">
-                        <span class="slider"></span>
-                    </label>
-                    <span>Brutalist Light</span>
-                </div>
-                <div class="stat-badge" id="global-stats">
-                    <span class="indicator"></span>
-                    <span class="label">System Operational</span>
-                </div>
+        </div>
+    </nav>
+
+    <div class="container" style="padding: 2rem; padding-bottom: 6rem;">
+        
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Command Center</h1>
+                <p style="color: var(--l-sec);">Real-time monitoring and control of the ingestion pipeline.</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--l-border); padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 700; font-family: monospace;">
+                <div style="width:8px;height:8px;background:#008800;"></div>
+                SYSTEM OPERATIONAL
             </div>
         </header>
 
@@ -45,13 +47,13 @@
                         <h2>Chaos Control</h2>
                     </div>
                     <div class="source-list">
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5;">
+                        <p style="font-size: 0.85rem; color: var(--l-sec); margin-bottom: 1rem; line-height: 1.5;">
                             Inject network failures to test system resilience. The sandbox environment simulates 502s, 429s, and high latency.
                         </p>
-                        <button id="btn-chaos-trigger" class="btn btn-danger" style="width: 100%; margin-bottom: 0.5rem;">
+                        <button id="btn-chaos-trigger" class="btn-danger" style="width: 100%; margin-bottom: 0.5rem;">
                             Trigger Simulation
                         </button>
-                        <button id="btn-chaos-spike" class="btn btn-ghost" style="width: 100%; border-color: rgba(239, 68, 68, 0.2); color: var(--status-error);">
+                        <button id="btn-chaos-spike" class="btn-ghost" style="width: 100%; border-color: rgba(255, 0, 0, 0.2); color: #ff0000; text-align: center; cursor: pointer; padding: 0.5rem; font-family: monospace; font-weight: 700;">
                             Simulate Spike (5x)
                         </button>
                     </div>
@@ -61,7 +63,7 @@
                 <section class="panel">
                     <div class="section-header">
                         <h2>Active Sources</h2>
-                        <button id="refresh-sources" class="btn btn-icon" title="Refresh Sources">
+                        <button id="refresh-sources" class="btn-icon" title="Refresh Sources">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
                         </button>
                     </div>
@@ -77,7 +79,7 @@
                     <div class="section-header">
                         <h2>Activity Log</h2>
                     </div>
-                    <div id="activity-log-list" class="source-list" style="max-height: 200px; overflow-y: auto; font-family: var(--font-mono); font-size: 0.8rem;">
+                    <div id="activity-log-list" class="source-list" style="max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.8rem;">
                         <!-- Populated by JS -->
                         Loading logs...
                     </div>
@@ -95,10 +97,10 @@
                             <span class="toggle-label">Remote Only</span>
                         </label>
                         <div style="display: flex; gap: 0.5rem;">
-                            <button class="btn btn-ghost" id="btn-export-csv" style="padding: 0.25rem 0.75rem; font-size: 0.85rem;">
+                            <button class="btn-ghost" id="btn-export-csv" style="cursor: pointer; border: 1px solid var(--l-border); background: transparent; font-weight: 700;">
                                 Export CSV
                             </button>
-                            <button class="btn btn-ghost" id="btn-export-json" style="padding: 0.25rem 0.75rem; font-size: 0.85rem;">
+                            <button class="btn-ghost" id="btn-export-json" style="cursor: pointer; border: 1px solid var(--l-border); background: transparent; font-weight: 700;">
                                 Export JSON
                             </button>
                         </div>
@@ -121,9 +123,9 @@
                     </table>
                 </div>
                 <div class="pagination">
-                    <button class="btn btn-ghost" id="prev-page" disabled>Previous</button>
-                    <span id="page-indicator" class="mono">Page 1</span>
-                    <button class="btn btn-ghost" id="next-page">Next</button>
+                    <button class="btn-ghost" id="prev-page" style="cursor:pointer; border: 1px solid var(--l-border); font-weight:700; background:transparent;" disabled>Previous</button>
+                    <span id="page-indicator" style="font-family: monospace; font-weight: 700;">Page 1</span>
+                    <button class="btn-ghost" id="next-page" style="cursor:pointer; border: 1px solid var(--l-border); font-weight:700; background:transparent;">Next</button>
                 </div>
             </section>
         </main>
@@ -137,11 +139,11 @@
                 <span class="status-badge"></span>
             </div>
             <div class="source-meta">
-                <span class="adapter-type mono"></span>
-                <span class="last-run mono"></span>
+                <span class="adapter-type"></span>
+                <span class="last-run"></span>
             </div>
             <div class="source-actions">
-                <button class="btn btn-primary btn-trigger" style="width: 100%;">
+                <button class="btn-primary btn-trigger" style="width: 100%; border: none; padding: 0.5rem; font-weight: 700; cursor: pointer; text-align: center;">
                     Ingest Now
                 </button>
             </div>
