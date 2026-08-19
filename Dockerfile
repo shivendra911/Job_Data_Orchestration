@@ -23,6 +23,8 @@ COPY . .
 RUN useradd -m myuser
 USER myuser
 
-EXPOSE 8000
+# Hugging Face Spaces requires port 7860
+EXPOSE 7860
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run database migrations, then start the Uvicorn server
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 7860"]
