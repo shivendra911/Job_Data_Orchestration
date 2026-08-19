@@ -7,8 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // DOM Elements
     const searchInput = document.getElementById('hero-search-input');
-    const locationInput = document.getElementById('location-input');
-    const remoteCheckbox = document.getElementById('remote-checkbox');
+    const locationInput = document.getElementById('hero-location-input');
+    const searchBtn = document.getElementById('hero-search-btn');
+    
+    const jobTypeFilters = Array.from(document.querySelectorAll('.job-type-filter'));
+    const workModelFilters = Array.from(document.querySelectorAll('.work-model-filter'));
+    
     const salarySlider = document.getElementById('salary-slider');
     const salaryDisplay = document.getElementById('salary-display');
     const sortSelect = document.getElementById('sort-select');
@@ -30,14 +34,41 @@ document.addEventListener('DOMContentLoaded', () => {
         if (num >= 1000) return '$' + (num / 1000).toFixed(0) + 'k+';
         return '$' + num;
     };
+    
+    const timeAgo = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return '';
+        
+        const seconds = Math.floor((new Date() - date) / 1000);
+        let interval = seconds / 31536000;
+        
+        if (interval > 1) return 'Posted ' + Math.floor(interval) + ' years ago';
+        interval = seconds / 2592000;
+        if (interval > 1) return 'Posted ' + Math.floor(interval) + ' months ago';
+        interval = seconds / 86400;
+        if (interval >= 2) return 'Posted ' + Math.floor(interval) + ' days ago';
+        if (interval >= 1) return 'Posted 1 day ago';
+        return 'Posted today';
+    };
 
     // Initial Fetch
     fetchJobs();
 
     // Event Listeners for Filters
-    if (searchInput) searchInput.addEventListener('input', applyFilters);
-    if (locationInput) locationInput.addEventListener('input', applyFilters);
-    if (remoteCheckbox) remoteCheckbox.addEventListener('change', applyFilters);
+    if (searchInput) {
+        searchInput.addEventListener('input', applyFilters);
+        searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyFilters(); });
+    }
+    if (locationInput) {
+        locationInput.addEventListener('input', applyFilters);
+        locationInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyFilters(); });
+    }
+    if (searchBtn) searchBtn.addEventListener('click', applyFilters);
+    
+    jobTypeFilters.forEach(cb => cb.addEventListener('change', applyFilters));
+    workModelFilters.forEach(cb => cb.addEventListener('change', applyFilters));
+    
     if (sortSelect) sortSelect.addEventListener('change', applyFilters);
     
     if (salarySlider) {
@@ -53,7 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             if (searchInput) searchInput.value = '';
             if (locationInput) locationInput.value = '';
-            if (remoteCheckbox) remoteCheckbox.checked = false;
+            
+            jobTypeFilters.forEach(cb => cb.checked = false);
+            workModelFilters.forEach(cb => cb.checked = false);
+            
             if (salarySlider) salarySlider.value = 0;
             if (salaryDisplay) salaryDisplay.textContent = 'Any';
             if (sortSelect) sortSelect.value = 'newest';
@@ -103,9 +137,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyFilters() {
         const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
         const locQuery = locationInput ? locationInput.value.toLowerCase().trim() : '';
-        const isRemoteOnly = remoteCheckbox ? remoteCheckbox.checked : false;
         const minSalary = salarySlider ? (parseInt(salarySlider.value) || 0) : 0;
         const sortOrder = sortSelect ? sortSelect.value : 'newest';
+        
+        const selectedJobTypes = jobTypeFilters.filter(cb => cb.checked).map(cb => cb.value);
+        const selectedWorkModels = workModelFilters.filter(cb => cb.checked).map(cb => cb.value);
 
         filteredJobs = allJobs.filter(job => {
             let matchesQuery = true;
@@ -121,11 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 matchesLocation = job.location && job.location.toLowerCase().includes(locQuery);
             }
 
-            let matchesRemote = true;
-            if (isRemoteOnly) {
-                matchesRemote = job.remote === true;
-            }
-
+            // Salary Filter
             let matchesSalary = true;
             if (minSalary > 0) {
                 if (job.salary_max) {
@@ -137,7 +169,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            return matchesQuery && matchesLocation && matchesRemote && matchesSalary;
+            // Job Type Heuristics (fallback if actual tags aren't perfectly aligned)
+            let matchesJobType = true;
+            if (selectedJobTypes.length > 0) {
+                const titleLower = job.title.toLowerCase();
+                const tagsLower = (job.tags || []).map(t => t.toLowerCase());
+                const fullText = titleLower + " " + tagsLower.join(" ");
+                
+                const isIntern = fullText.includes('intern') || fullText.includes('werkstudent');
+                const isContract = fullText.includes('contract') || fullText.includes('freelance') || fullText.includes('temp');
+                const isPartTime = fullText.includes('part-time') || fullText.includes('teilzeit');
+                const isFullTime = !isIntern && !isContract && !isPartTime;
+
+                matchesJobType = false;
+                if (selectedJobTypes.includes('internship') && isIntern) matchesJobType = true;
+                if (selectedJobTypes.includes('contract') && isContract) matchesJobType = true;
+                if (selectedJobTypes.includes('part-time') && isPartTime) matchesJobType = true;
+                if (selectedJobTypes.includes('full-time') && isFullTime) matchesJobType = true;
+            }
+
+            // Work Model Heuristics
+            let matchesWorkModel = true;
+            if (selectedWorkModels.length > 0) {
+                const titleLower = job.title.toLowerCase();
+                const locStr = (job.location || '').toLowerCase();
+                
+                const isRemote = job.remote === true || titleLower.includes('remote') || locStr.includes('remote');
+                const isHybrid = titleLower.includes('hybrid') || locStr.includes('hybrid');
+                const isOnSite = !isRemote && !isHybrid;
+
+                matchesWorkModel = false;
+                if (selectedWorkModels.includes('remote') && isRemote) matchesWorkModel = true;
+                if (selectedWorkModels.includes('hybrid') && isHybrid) matchesWorkModel = true;
+                if (selectedWorkModels.includes('on-site') && isOnSite) matchesWorkModel = true;
+            }
+
+            return matchesQuery && matchesLocation && matchesSalary && matchesJobType && matchesWorkModel;
         });
 
         // Sorting
@@ -161,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (filteredJobs.length === 0) {
             jobsContainer.innerHTML = `
-                <div class="job-card" style="text-align: center; padding: 4rem 2rem; border-style: dashed;">
+                <div class="job-card" style="text-align: center; padding: 4rem 2rem; border-style: dashed; cursor: default;">
                     <h3 style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 0.5rem;">No matches found</h3>
                     <p style="color: var(--text-muted); font-size: 0.9rem;">Try adjusting your search terms or relaxing your filters.</p>
                 </div>
@@ -178,6 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
         jobsToShow.forEach((job, index) => {
             const card = document.createElement('div');
             card.className = 'job-card';
+            // Open job link when card is clicked
+            card.onclick = () => window.open(job.url, '_blank');
 
             // Formatting
             let salaryStr = '<div class="job-meta-item"><span style="opacity:0.5">Salary not specified</span></div>';
@@ -192,17 +261,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const locationStr = job.location ? `<div class="job-meta-item"> ${job.location}</div>` : '';
-            const remoteStr = job.remote ? `<div class="job-meta-item"> Remote</div>` : '';
             
-            const postedDate = job.posted_at ? new Date(job.posted_at).toLocaleDateString(undefined, {month: 'short', day: 'numeric'}) : '';
-            const dateStr = postedDate ? `<div class="job-meta-item" style="margin-left: auto;"> ${postedDate}</div>` : '';
+            const dateStr = job.posted_at ? `<div class="job-meta-item" style="margin-left: auto;"> ${timeAgo(job.posted_at)}</div>` : '';
 
             let tagsHtml = '';
             if (job.tags && job.tags.length > 0) {
                 tagsHtml = job.tags.slice(0, 4).map(t => `<span class="tag">${t}</span>`).join('');
             }
             
-            let sourceTag = `<span class="tag" style="background: var(--text-main); color: var(--bg-main); border: none;">${job.source_name || job.source_id.split('-')[0]}</span>`;
+            // Remove the 6ecb8843 fallback tag as requested
+            // let sourceTag = `<span class="tag" style="background: var(--text-main); color: var(--bg-main); border: none;">${job.source_name || job.source_id.split('-')[0]}</span>`;
 
             // Initials for company logo
             const companyName = job.company || 'Unknown';
@@ -213,24 +281,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="job-title-row">
                         <div class="company-logo">${initials}</div>
                         <div>
-                            <a href="${job.url}" target="_blank" class="job-title">${job.title}</a>
+                            <a href="${job.url}" target="_blank" onclick="event.stopPropagation()" class="job-title">${job.title}</a>
                             <div class="job-company">${companyName}</div>
                         </div>
                     </div>
                     <div>
-                        <a href="${job.url}" target="_blank" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.85rem; border-radius: 6px;">Apply Now</a>
+                        <a href="${job.url}" target="_blank" onclick="event.stopPropagation()" class="btn-primary" style="padding: 0.35rem 0.8rem; font-size: 0.85rem; border-radius: 6px;">Apply Now</a>
                     </div>
                 </div>
                 <div class="job-meta">
                     ${locationStr}
-                    ${remoteStr}
                     ${salaryStr}
                     ${dateStr}
                 </div>
-                <div class="job-tags">
-                    ${sourceTag}
-                    ${tagsHtml}
-                </div>
+                ${tagsHtml ? `<div class="job-tags">${tagsHtml}</div>` : ''}
             `;
             jobsContainer.appendChild(card);
         });

@@ -12,6 +12,16 @@
         }
     </script>
     <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+        }
+
         /* Hero Search Bar */
         .hero-search-container {
             background-color: var(--bg-panel);
@@ -25,43 +35,81 @@
 
         .hero-title {
             font-size: 2.2rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
             color: var(--text-main);
             letter-spacing: -0.02em;
             font-weight: 700;
         }
 
         .hero-search-wrapper {
-            position: relative;
-            max-width: 650px;
+            display: flex;
+            gap: 0.5rem;
+            max-width: 800px;
             margin: 0 auto;
+            background: var(--bg-main);
+            border: 2px solid var(--border-subtle);
+            padding: 0.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            align-items: center;
+        }
+        
+        .hero-search-input-group {
+            flex: 2;
+            position: relative;
+            border-right: 1px solid var(--border-subtle);
+        }
+        
+        .hero-location-input-group {
+            flex: 1;
+            position: relative;
         }
 
         .hero-search-icon {
             position: absolute;
-            left: 1.25rem;
+            left: 1rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             pointer-events: none;
         }
 
-        .hero-search-input {
+        .hero-search-input, .hero-location-input {
             width: 100%;
-            padding: 1rem 1.25rem 1rem 3rem;
+            border: none;
+            background: transparent;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
             font-size: 1rem;
-            border-radius: 8px;
-            border: 2px solid var(--border-subtle);
-            background-color: var(--bg-main);
             color: var(--text-main);
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            outline: none;
+            font-family: var(--font-sans);
+        }
+        
+        .hero-search-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            white-space: nowrap;
         }
 
-        .hero-search-input:focus {
-            outline: none;
-            border-color: var(--text-muted);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        @media (max-width: 600px) {
+            .hero-search-wrapper {
+                flex-direction: column;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                gap: 1rem;
+            }
+            .hero-search-input-group, .hero-location-input-group {
+                width: 100%;
+                border-right: none;
+                background: var(--bg-main);
+                border: 2px solid var(--border-subtle);
+                border-radius: 8px;
+            }
+            .hero-search-btn {
+                width: 100%;
+            }
         }
 
         /* Layout */
@@ -106,7 +154,7 @@
             margin-bottom: 0;
         }
 
-        .filter-group label {
+        .filter-group label.group-label {
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -115,87 +163,27 @@
             margin-bottom: 0.5rem;
             color: var(--text-main);
         }
-
-        .input-icon-wrapper {
-            position: relative;
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
         }
-
-        .input-icon {
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            pointer-events: none;
-        }
-
-        .input-icon-wrapper input[type="text"] {
-            width: 100%;
-            padding: 0.6rem 0.6rem 0.6rem 2rem;
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-main);
-            border-radius: 6px;
-            font-family: var(--font-sans);
-            font-size: 0.85rem;
-        }
-
-        .input-icon-wrapper input[type="text"]:focus {
-            outline: none;
-            border-color: var(--text-muted);
-        }
-
-        /* Modern Toggle Switch */
-        .toggle-switch {
+        
+        .checkbox-label {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            padding: 0.25rem 0;
-        }
-
-        .toggle-label {
+            gap: 0.5rem;
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: normal;
+            cursor: pointer;
             color: var(--text-main);
         }
-
-        .toggle-input {
-            display: none;
-        }
-
-        .toggle-track {
-            width: 40px;
-            height: 22px;
-            background-color: var(--border-subtle);
-            border-radius: 22px;
-            position: relative;
-            transition: background-color 0.2s;
-        }
-
-        .toggle-thumb {
-            width: 16px;
-            height: 16px;
-            background-color: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
-
-        [data-theme="brutalist"] .toggle-thumb {
-            background-color: var(--bg-main);
-            border: 1px solid var(--text-main);
-        }
-
-        .toggle-input:checked + .toggle-track {
-            background-color: var(--status-success);
-        }
-
-        .toggle-input:checked + .toggle-track .toggle-thumb {
-            transform: translateX(18px);
+        
+        .checkbox-label input {
+            accent-color: var(--text-main);
+            cursor: pointer;
         }
 
         /* Modern Range Slider */
@@ -240,11 +228,14 @@
             margin-bottom: 1rem;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .job-card:hover {
-            border-color: var(--text-muted);
+            border-color: #999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         }
 
         .job-header {
@@ -262,15 +253,15 @@
 
         /* Company Logo Placeholder */
         .company-logo {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 6px;
             background-color: var(--bg-panel);
             border: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--text-main);
             text-transform: uppercase;
@@ -278,7 +269,7 @@
         }
 
         .job-title {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-main);
             text-decoration: none;
@@ -290,7 +281,7 @@
         }
 
         .job-company {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 500;
             color: var(--text-muted);
             margin-top: 0.2rem;
@@ -368,7 +359,7 @@
 
         #loading-indicator {
             text-align: center;
-            padding: 3rem;
+            padding: 4rem;
             color: var(--text-muted);
             display: flex;
             flex-direction: column;
@@ -421,8 +412,15 @@
         <div class="container">
             <h1 class="hero-title">Find Your Next Role</h1>
             <div class="hero-search-wrapper">
-                <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" id="hero-search-input" class="hero-search-input" placeholder="Search by title, company, or keywords..." autocomplete="off">
+                <div class="hero-search-input-group">
+                    <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="hero-search-input" class="hero-search-input" placeholder="Job title, company, or keywords..." autocomplete="off">
+                </div>
+                <div class="hero-location-input-group">
+                    <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <input type="text" id="hero-location-input" class="hero-location-input" placeholder="Location" autocomplete="off">
+                </div>
+                <button id="hero-search-btn" class="btn-primary hero-search-btn">Search</button>
             </div>
         </div>
     </div>
@@ -435,33 +433,36 @@
                     <h3>Filters</h3>
                     <a href="#" id="reset-filters" style="font-size: 0.8rem; color: var(--text-muted); text-decoration: underline;">Reset All</a>
                 </div>
-                
+
                 <div class="filter-group">
-                    <label for="location-input">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        Location
+                    <label class="group-label">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        Job Type
                     </label>
-                    <div class="input-icon-wrapper">
-                        <svg class="input-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" id="location-input" placeholder="City or country...">
+                    <div class="checkbox-group">
+                        <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="full-time"> Full-time</label>
+                        <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="part-time"> Part-time</label>
+                        <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="internship"> Internship</label>
+                        <label class="checkbox-label"><input type="checkbox" class="job-type-filter" value="contract"> Contract</label>
                     </div>
                 </div>
 
                 <div class="filter-group">
-                    <label>Work Model</label>
-                    <label class="toggle-switch">
-                        <span class="toggle-label">Remote Only</span>
-                        <input type="checkbox" id="remote-checkbox" class="toggle-input">
-                        <div class="toggle-track">
-                            <div class="toggle-thumb"></div>
-                        </div>
+                    <label class="group-label">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        Work Model
                     </label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label"><input type="checkbox" class="work-model-filter" value="remote"> Remote</label>
+                        <label class="checkbox-label"><input type="checkbox" class="work-model-filter" value="hybrid"> Hybrid</label>
+                        <label class="checkbox-label"><input type="checkbox" class="work-model-filter" value="on-site"> On-site</label>
+                    </div>
                 </div>
 
                 <div class="filter-group">
-                    <label for="salary-slider">
+                    <label class="group-label" for="salary-slider">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                        Minimum Salary
+                        Minimum Salary <span style="font-weight:normal; opacity:0.7;">(optional)</span>
                     </label>
                     <div class="range-slider-wrapper">
                         <input type="range" id="salary-slider" class="range-slider" min="0" max="250000" step="5000" value="0">
