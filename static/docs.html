@@ -42,9 +42,9 @@
                 <li>
                     <a href="#endpoints">Endpoints</a>
                     <ul class="sub-nav">
-                        <li><a href="#get-jobs">List Jobs</a></li>
-                        <li><a href="#get-sources">List Sources</a></li>
-                        <li><a href="#trigger">Trigger Ingestion</a></li>
+                        <li><a href="#jobs-api">Jobs API</a></li>
+                        <li><a href="#sources-api">Sources API</a></li>
+                        <li><a href="#ingestion-api">Ingestion API</a></li>
                     </ul>
                 </li>
                 <li><a href="#rate-limits">Rate Limits</a></li>
@@ -61,16 +61,35 @@
             
             <h2 id="endpoints">Endpoints</h2>
             
-            <h3 id="get-jobs">List Jobs</h3>
-            <p>Retrieve a paginated list of normalized job data across all sources.</p>
-            <pre>GET /api/v1/jobs?skip=0&limit=50</pre>
+            <h3 id="jobs-api">Jobs API</h3>
             
-            <h3 id="get-sources">List Sources</h3>
-            <p>Get the health status, configurations, and latency metrics of all active source adapters.</p>
-            <pre>GET /api/v1/sources</pre>
+            <p><strong>List Jobs</strong><br>
+            Retrieve a paginated list of normalized job data across all sources. You can optionally filter by remote status or a specific source ID.</p>
+            <pre>GET /api/v1/jobs/?skip=0&limit=20&remote_only=false</pre>
             
-            <h3 id="trigger">Trigger Ingestion</h3>
-            <p>Manually trigger a pipeline sync for a specific source adapter. This bypasses the scheduler and immediately queues an orchestration run.</p>
+            <p><strong>Get Single Job</strong><br>
+            Retrieve the complete payload for a specific job entry by its UUID.</p>
+            <pre>GET /api/v1/jobs/{job_id}</pre>
+            
+            <p><strong>Export Jobs (JSON/CSV)</strong><br>
+            Download the entire active job dataset in bulk formatting.</p>
+            <pre>GET /api/v1/jobs/export/json
+GET /api/v1/jobs/export/csv</pre>
+
+            <h3 id="sources-api" style="margin-top: 3rem;">Sources API</h3>
+            
+            <p><strong>List Sources & Health</strong><br>
+            Get the health status, configurations, and latency metrics of all active source adapters.</p>
+            <pre>GET /api/v1/sources/</pre>
+            
+            <p><strong>View Activity Logs</strong><br>
+            Fetch the latest 10 scraping run logs detailing status, duration, and error messages (e.g., HTTP 429 warnings).</p>
+            <pre>GET /api/v1/sources/logs</pre>
+            
+            <h3 id="ingestion-api" style="margin-top: 3rem;">Ingestion API</h3>
+            
+            <p><strong>Trigger Manual Sync</strong><br>
+            Manually trigger a pipeline sync for a specific source adapter. This bypasses the scheduler, executes synchronously, and returns the ingestion metrics (e.g., new jobs vs updated jobs).</p>
             <pre>POST /api/v1/ingest/{source_name}</pre>
             
             <h2 id="rate-limits">Rate Limits</h2>
